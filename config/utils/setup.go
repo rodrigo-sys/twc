@@ -1,6 +1,8 @@
 package config
 
 import (
+	"io"
+	"net/http"
 	"os"
 	"path/filepath"
 )
@@ -21,16 +23,16 @@ func createConfig() {
 		// defer source_file.Close()
 	}
 
-	destination_file, _ := os.Create(config_path)
+	destination_file, _ := os.Create(GetConfigPath())
 	defer destination_file.Close()
 	io.Copy(destination_file, source_file)
 }
 
 func SetupConfig() {
 	/*td: think to do this in a setup or installer script just one time*/
-	
+
 	// create config folder
-	config_path := getConfigPath()
+	config_path := GetConfigPath()
 	os.MkdirAll(filepath.Dir(config_path), os.ModePerm)
 
 	// create config file
