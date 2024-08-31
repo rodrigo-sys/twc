@@ -38,8 +38,7 @@ func (y Youtube) OpenChannel(channel types.Channel) {
 	url := channel.Platform.GetUrl(channel)
 	webpage_url, _ := exec.Command("sh", "-c", fmt.Sprintf("yt-dlp --print webpage_url '%s'", url)).Output()
 
-	home, _ := os.UserHomeDir()
-	pytchat_path := home + ".local/bin/pytchat"
+	pytchat_path := os.Getenv("PYTCHAT_PATH")
 	exec.Command("mpv", url).Start()
 	exec.Command("sh", "-c", fmt.Sprintf(`"$TERMINAL" sh -c "'%s' '%s'"`, pytchat_path, string(webpage_url))).Start()
 }

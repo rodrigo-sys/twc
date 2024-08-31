@@ -15,6 +15,8 @@ import (
 	. "twc/platform/youtube"
 	. "twc/types"
 
+	_ "twc/config"
+
 	"github.com/koki-develop/go-fzf"
 )
 
@@ -50,10 +52,8 @@ func (channels *Channels) CheckStatus() {
 func (channels *Channels) GetChannels() { // or followed
 	// td: allow using official APIs to get the followed channels
 
-	home, _ := os.UserHomeDir()
-	file_path := home + "/.config/twc/channels"
-	fmt.Println(file_path)
-	content, err := os.ReadFile(file_path)
+	channels_file := os.Getenv("CHANNELS_PATH")
+	content, err := os.ReadFile(channels_file)
 	if err != nil {
 		fmt.Println("Error opening file:", err)
 	}

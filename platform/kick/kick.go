@@ -35,8 +35,7 @@ func (k Kick) OpenChannel(channel types.Channel) {
 	url := "https://kick.com/" + channel.Name //+ "/livestream"
 	exec.Command("mpv", url).Start()
 
-	home, _ := os.UserHomeDir()
-	kickchat_dir := home + ".local/lib"
+	kickchat_dir := os.Getenv("KICKCHAT_DIR")
 	exec.Command("sh", "-c", fmt.Sprintf(
 		`"$TERMINAL" sh -c "(cd '%s' && pnpm dev '%s')"`, kickchat_dir, channel.Name,
 	)).Start()
