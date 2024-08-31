@@ -2,10 +2,13 @@ package main
 
 import (
 	. "twc/channels"
+	config "twc/config/utils"
 	. "twc/videos"
 )
 
 func main() {
+	config.SetupConfig()
+
 	var channels Channels
 
 	channels.GetChannels()
