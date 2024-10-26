@@ -7,6 +7,7 @@ import (
 
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
 /* ITEM */
@@ -38,6 +39,20 @@ func (i itemWrapper[T]) FilterValue() string {
 	}
 	return ""
 }
+
+/* STYLES */
+var (
+	itemStyle     = lipgloss.NewStyle().PaddingLeft(2)
+	kickStyle     = selectedStyle.BorderForeground(lipgloss.Color("10"))
+	youtubeStyle  = selectedStyle.BorderForeground(lipgloss.Color("9"))
+	twitchStyle   = selectedStyle.BorderForeground(lipgloss.Color("13"))
+	selectedStyle = lipgloss.NewStyle().
+			Bold(true).
+			BorderStyle(lipgloss.ThickBorder()).
+			BorderLeft(true).
+			BorderForeground(lipgloss.Color("12")).
+			PaddingLeft(1)
+)
 
 /* STATE ENUM */
 type state int
@@ -86,7 +101,8 @@ func convertToItems[T any](items []T) []list.Item {
 
 /* THE MENU */
 func Menu[T any](items []T) {
-	m := model{channels_list: list.New(convertToItems(items), list.NewDefaultDelegate(), 10, 20)}
+	// m := model{channels_list: list.New(convertToItems(items), list.NewDefaultDelegate(), 10, 20)}
+	m := model{channels_list: list.New(convertToItems(items), itemDelegate{}, 10, 20)}
 	m.current_list = m.channels_list
 
 	p := tea.NewProgram(m)
