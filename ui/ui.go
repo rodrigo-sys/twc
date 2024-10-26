@@ -35,3 +35,11 @@ func (i itemWrapper[T]) FilterValue() string {
 	}
 	return ""
 }
+
+/* STATE ENUM */
+type state int
+
+const (
+	channels_list state = iota
+	views_list
+)
