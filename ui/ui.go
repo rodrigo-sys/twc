@@ -76,6 +76,25 @@ var (
 			PaddingLeft(1)
 )
 
+/* TWEAK LIST */
+// func tweakList(l *list.Model) {
+func tweakList(l list.Model) list.Model {
+	l.SetDelegate(itemDelegate{})
+
+	l.SetShowHelp(false)
+	l.SetShowTitle(false)
+	l.SetShowStatusBar(false)
+	l.SetShowPagination(false)
+	l.SetShowFilter(true)
+	l.FilterInput.Prompt = "> "
+	// lista.FilterInput.PromptStyle = lipgloss.NewStyle()
+	// lista.FilterInput.TextStyle = lipgloss.NewStyle()
+	// lista.Styles.FilterCursor
+	l.SetShowFilter(true)
+
+	return l
+}
+
 /* STATE ENUM */
 type state int
 
@@ -123,8 +142,8 @@ func convertToItems[T any](items []T) []list.Item {
 
 /* THE MENU */
 func Menu[T any](items []T) {
-	// m := model{channels_list: list.New(convertToItems(items), list.NewDefaultDelegate(), 10, 20)}
-	m := model{channels_list: list.New(convertToItems(items), itemDelegate{}, 10, 20)}
+	m := model{}
+	m.channels_list = tweakList(list.New(convertToItems(items), itemDelegate{}, 10, 20))
 	m.current_list = m.channels_list
 
 	p := tea.NewProgram(m)
