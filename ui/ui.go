@@ -4,6 +4,7 @@ import (
 	. "twc/types"
 
 	"github.com/charmbracelet/bubbles/list"
+	tea "github.com/charmbracelet/bubbletea"
 )
 
 /* ITEM */
@@ -43,3 +44,24 @@ const (
 	channels_list state = iota
 	views_list
 )
+
+/* MODEL */
+type model struct {
+	// state state
+	current_list  list.Model
+	channels_list list.Model
+	views_list    list.Model
+}
+
+func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	var cmd tea.Cmd
+	return m, cmd
+}
+
+func (m model) Init() tea.Cmd {
+	return nil
+}
+
+func (m model) View() string {
+	return m.current_list.View()
+}
