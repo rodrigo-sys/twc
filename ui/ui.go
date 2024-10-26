@@ -68,3 +68,16 @@ func (m model) Init() tea.Cmd {
 func (m model) View() string {
 	return m.current_list.View()
 }
+
+/* HELPERS */
+func convertToItems[T any](items []T) []list.Item {
+	/* convert items[] to list.Item[] */
+	list_items := make([]list.Item, len(items))
+	for i, item := range items {
+		list_items[i] = itemWrapper[T]{
+			data: item,
+		}
+	}
+
+	return list_items
+}
