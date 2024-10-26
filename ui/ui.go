@@ -54,7 +54,10 @@ type model struct {
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	// var cmd tea.Cmd
+	// return m, cmd
 	var cmd tea.Cmd
+	m.current_list, cmd = m.current_list.Update(msg)
 	return m, cmd
 }
 
