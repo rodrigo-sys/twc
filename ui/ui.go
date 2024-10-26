@@ -2,6 +2,7 @@ package ui
 
 import (
 	"fmt"
+	"io"
 	"os"
 	. "twc/types"
 
@@ -38,6 +39,27 @@ func (i itemWrapper[T]) FilterValue() string {
 		return i.Name
 	}
 	return ""
+}
+
+/* ITEM DELEGATE */
+type itemDelegate struct{}
+
+func (d itemDelegate) Height() int                             { return 1 }
+func (d itemDelegate) Spacing() int                            { return 0 }
+func (d itemDelegate) Update(_ tea.Msg, _ *list.Model) tea.Cmd { return nil }
+
+func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list.Item) {
+	style := itemStyle
+	if index == m.Index() {
+		style = selectedStyle
+	}
+
+	var text string
+	if i, ok := listItem.(list.DefaultItem); ok {
+		text = i.Title()
+	}
+
+	fmt.Fprint(w, style.Render(text))
 }
 
 /* STYLES */
