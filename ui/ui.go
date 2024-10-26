@@ -1,6 +1,8 @@
 package ui
 
 import (
+	"fmt"
+	"os"
 	. "twc/types"
 
 	"github.com/charmbracelet/bubbles/list"
@@ -80,4 +82,17 @@ func convertToItems[T any](items []T) []list.Item {
 	}
 
 	return list_items
+}
+
+/* THE MENU */
+func Menu[T any](items []T) {
+	m := model{channels_list: list.New(convertToItems(items), list.NewDefaultDelegate(), 10, 20)}
+	m.current_list = m.channels_list
+
+	p := tea.NewProgram(m)
+	_, err := p.Run()
+	if err != nil {
+		fmt.Printf("error %v", err)
+		os.Exit(1)
+	}
 }
