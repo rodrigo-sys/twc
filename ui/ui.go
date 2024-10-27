@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"reflect"
 	. "twc/types"
 
 	"github.com/charmbracelet/bubbles/list"
@@ -77,7 +78,6 @@ var (
 )
 
 /* TWEAK LIST */
-// func tweakList(l *list.Model) {
 func tweakList(l list.Model) list.Model {
 	l.SetDelegate(itemDelegate{})
 
@@ -87,9 +87,6 @@ func tweakList(l list.Model) list.Model {
 	l.SetShowPagination(false)
 	l.SetShowFilter(true)
 	l.FilterInput.Prompt = "> "
-	// lista.FilterInput.PromptStyle = lipgloss.NewStyle()
-	// lista.FilterInput.TextStyle = lipgloss.NewStyle()
-	// lista.Styles.FilterCursor
 	l.SetShowFilter(true)
 
 	return l
@@ -100,22 +97,52 @@ type state int
 
 const (
 	channels_list state = iota
-	views_list
+	videos_list
 )
 
 /* MODEL */
 type model struct {
-	// state state
-	current_list  list.Model
+	state         state
+	current_list  *list.Model
 	channels_list list.Model
 	views_list    list.Model
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	switch msg := msg.(type) {
+	case tea.KeyMsg:
+		keypress := msg.String()
+		switch keypress {
+		case "l":
+			switch m.state {
+			case channels_list:
+				index := m.current_list.Index()
+				item := m.current_list.SelectedItem().(itemWrapper[Channel])
+
+				if item.data.Islive {
+					if reflect.ValueOf(item.sublist).IsZero() {
+						videos := item.data.Platform.GetVods(item.data)
+						item.sublist = tweakList(list.New(convertToItems(videos), itemDelegate{}, 10, 20))
+						m.channels_list.SetItem(index, item)
+					}
+
+					m.current_list = &item.sublist
+					m.state = videos_list
+				}
+			}
+		case "h":
+			switch m.state {
+			case videos_list:
+				m.current_list = &m.channels_list
+				m.state = channels_list
+			}
+		}
+	}
+
 	// var cmd tea.Cmd
-	// return m, cmd
-	var cmd tea.Cmd
-	m.current_list, cmd = m.current_list.Update(msg)
+	l, cmd := m.current_list.Update(msg)
+	m.current_list = &l
+
 	return m, cmd
 }
 
@@ -129,7 +156,6 @@ func (m model) View() string {
 
 /* HELPERS */
 func convertToItems[T any](items []T) []list.Item {
-	/* convert items[] to list.Item[] */
 	list_items := make([]list.Item, len(items))
 	for i, item := range items {
 		list_items[i] = itemWrapper[T]{
@@ -144,7 +170,8 @@ func convertToItems[T any](items []T) []list.Item {
 func Menu[T any](items []T) {
 	m := model{}
 	m.channels_list = tweakList(list.New(convertToItems(items), itemDelegate{}, 10, 20))
-	m.current_list = m.channels_list
+	m.current_list = &m.channels_list
+	m.state = channels_list
 
 	p := tea.NewProgram(m)
 	_, err := p.Run()
