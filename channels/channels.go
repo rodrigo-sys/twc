@@ -29,6 +29,12 @@ var platforms = map[string]Platform{
 	"kick":    Kick{},
 }
 
+func (channels *Channels) CheckStatusSync() {
+	for i := range *channels {
+		(*channels)[i].Islive = (*channels)[i].Platform.CheckStatus((*channels)[i])
+	}
+}
+
 func (channels *Channels) CheckStatus() {
 	//td: make channel size configurable
 	var wg sync.WaitGroup

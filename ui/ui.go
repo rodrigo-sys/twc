@@ -13,13 +13,13 @@ import (
 )
 
 /* ITEM */
-type itemWrapper[T any] struct {
-	data    T
-	sublist list.Model
+type ItemWrapper[T any] struct {
+	Data    T
+	Sublist list.Model
 }
 
-func (i itemWrapper[T]) Title() string {
-	switch i := any(i.data).(type) {
+func (i ItemWrapper[T]) Title() string {
+	switch i := any(i.Data).(type) {
 	case Channel:
 		return i.Name
 	case Video:
@@ -28,12 +28,12 @@ func (i itemWrapper[T]) Title() string {
 	return ""
 }
 
-func (i itemWrapper[T]) Description() string {
+func (i ItemWrapper[T]) Description() string {
 	return ""
 }
 
-func (i itemWrapper[T]) FilterValue() string {
-	switch i := any(i.data).(type) {
+func (i ItemWrapper[T]) FilterValue() string {
+	switch i := any(i.Data).(type) {
 	case Channel:
 		return i.Name
 	case Video:
@@ -102,10 +102,17 @@ const (
 
 /* MODEL */
 type model struct {
-	state         state
-	current_list  *list.Model
+	state        state
+	current_list *list.Model
+
 	channels_list list.Model
-	views_list    list.Model
+	videos_list   list.Model
+
+	// choice        itemWrapper
+	// choice_channel itemWrapper[Channel]
+	// choice_video   itemWrapper[Video]
+
+	choice any
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -116,19 +123,28 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "l":
 			switch m.state {
 			case channels_list:
-				index := m.current_list.Index()
-				item := m.current_list.SelectedItem().(itemWrapper[Channel])
+				m.channels_list = *m.current_list
+				index := m.channels_list.Index()
+				item := m.channels_list.SelectedItem().(ItemWrapper[Channel])
 
-				if item.data.Islive {
-					if reflect.ValueOf(item.sublist).IsZero() {
-						videos := item.data.Platform.GetVods(item.data)
-						item.sublist = tweakList(list.New(convertToItems(videos), itemDelegate{}, 10, 20))
+				if !item.Data.Islive {
+					if reflect.ValueOf(item.Sublist).IsZero() {
+						videos := item.Data.Platform.GetVods(item.Data)
+						item.Sublist = tweakList(list.New(convertToItems(videos), itemDelegate{}, 10, 20))
 						m.channels_list.SetItem(index, item)
 					}
 
-					m.current_list = &item.sublist
+					m.current_list = &item.Sublist
 					m.state = videos_list
+				} else {
+					m.choice = item
+					return m, tea.Quit
 				}
+			case videos_list:
+				m.videos_list = *m.current_list
+				item := m.videos_list.SelectedItem().(ItemWrapper[Video])
+				m.choice = item
+				return m, tea.Quit
 			}
 		case "h":
 			switch m.state {
@@ -158,25 +174,31 @@ func (m model) View() string {
 func convertToItems[T any](items []T) []list.Item {
 	list_items := make([]list.Item, len(items))
 	for i, item := range items {
-		list_items[i] = itemWrapper[T]{
-			data: item,
+		list_items[i] = ItemWrapper[T]{
+			Data: item,
 		}
 	}
 
 	return list_items
 }
 
-/* THE MENU */
-func Menu[T any](items []T) {
+func initialModel[T any](items []T) model {
 	m := model{}
 	m.channels_list = tweakList(list.New(convertToItems(items), itemDelegate{}, 10, 20))
 	m.current_list = &m.channels_list
 	m.state = channels_list
 
-	p := tea.NewProgram(m)
-	_, err := p.Run()
+	return m
+}
+
+/* THE MENU */
+func Menu[T any](items []T) any {
+	p := tea.NewProgram(initialModel(items))
+	m, err := p.Run()
 	if err != nil {
 		fmt.Printf("error %v", err)
 		os.Exit(1)
 	}
+
+	return m.(model).choice
 }
