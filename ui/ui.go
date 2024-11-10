@@ -60,6 +60,13 @@ func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 		text = i.Title()
 	}
 
+	switch i := listItem.(type) {
+	case ItemWrapper[Channel]:
+		if i.Data.Islive {
+			style = style.Foreground(lipgloss.Color("11"))
+		}
+	}
+
 	fmt.Fprint(w, style.Render(text))
 }
 
