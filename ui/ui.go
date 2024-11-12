@@ -137,6 +137,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				if !item.Data.Islive {
 					if reflect.ValueOf(item.Sublist).IsZero() {
 						videos := item.Data.Platform.GetVods(item.Data)
+						// fmt.Println(len(videos))
+
 						item.Sublist = tweakList(list.New(convertToItems(videos), itemDelegate{}, 10, 20))
 						m.channels_list.SetItem(index, item)
 					}
@@ -200,7 +202,7 @@ func initialModel[T any](items []T) model {
 
 /* THE MENU */
 func Menu[T any](items []T) any {
-	p := tea.NewProgram(initialModel(items))
+	p := tea.NewProgram(initialModel(items), tea.WithAltScreen())
 	m, err := p.Run()
 	if err != nil {
 		fmt.Printf("error %v", err)
