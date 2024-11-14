@@ -10,6 +10,10 @@ import (
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+
+	. "twc/platform/kick"
+	. "twc/platform/twitch"
+	. "twc/platform/youtube"
 )
 
 /* ITEM */
@@ -51,8 +55,18 @@ func (d itemDelegate) Update(_ tea.Msg, _ *list.Model) tea.Cmd { return nil }
 
 func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list.Item) {
 	style := itemStyle
+
 	if index == m.Index() {
 		style = selectedStyle
+
+		switch listItem.(ItemWrapper[Channel]).Data.Platform.(type) {
+		case Youtube:
+			style = youtubeStyle
+		case Kick:
+			style = kickStyle
+		case Twitch:
+			style = twitchStyle
+		}
 	}
 
 	var text string
