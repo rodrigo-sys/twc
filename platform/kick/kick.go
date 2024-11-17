@@ -18,23 +18,24 @@ func (k Kick) GetUrl(channel types.Channel) string {
 }
 
 func (k Kick) CheckStatus(channel types.Channel) bool {
-	err := exec.Command("sh", "-c", fmt.Sprintf("yt-dlp --print live_status --no-warnings '%s'", channel.Platform.GetUrl(channel))).Run()
-
-	return err == nil
-
 	/*
-		var scrapper_output string
-		var scrapper_json map[string]interface{}
-		var url = channel.Platform.GetUrl(channel) + "/livestream"
-
-		scrapper_output = utils.CloudScraperGet(url)
-		json.Unmarshal([]byte(scrapper_output), &scrapper_json)
-		// fmt.Printf("%+v\n", scrapper_json)
-
-		data := scrapper_json["data"]
-
-		return data != nil
+		err := exec.Command("sh", "-c", fmt.Sprintf("yt-dlp --print live_status --no-warnings '%s'", channel.Platform.GetUrl(channel))).Run()
+		return err == nil
 	*/
+
+	// /*
+	var scrapper_output string
+	var scrapper_json map[string]interface{}
+	var url = channel.Platform.GetUrl(channel) + "/livestream"
+
+	scrapper_output = utils.CloudScraperGet(url)
+	json.Unmarshal([]byte(scrapper_output), &scrapper_json)
+	// fmt.Printf("%+v\n", scrapper_json)
+
+	data := scrapper_json["data"]
+
+	return data != nil
+	// */
 }
 
 func (k Kick) OpenChannel(channel types.Channel) {

@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -59,13 +60,16 @@ func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 	if index == m.Index() {
 		style = selectedStyle
 
-		switch listItem.(ItemWrapper[Channel]).Data.Platform.(type) {
-		case Youtube:
-			style = youtubeStyle
-		case Kick:
-			style = kickStyle
-		case Twitch:
-			style = twitchStyle
+		switch i := listItem.(type) {
+		case ItemWrapper[Channel]:
+			switch i.Data.Platform.(type) {
+			case Youtube:
+				style = youtubeStyle
+			case Kick:
+				style = kickStyle
+			case Twitch:
+				style = twitchStyle
+			}
 		}
 	}
 
@@ -151,6 +155,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				if !item.Data.Islive {
 					if reflect.ValueOf(item.Sublist).IsZero() {
 						videos := item.Data.Platform.GetVods(item.Data)
+
+						j, _ := json.Marshal(videos)
+						os.WriteFile("vod.txt", j, 0644)
 						// fmt.Println(len(videos))
 
 						item.Sublist = tweakList(list.New(convertToItems(videos), itemDelegate{}, 10, 20))
