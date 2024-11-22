@@ -1,7 +1,6 @@
 package ui
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -55,11 +54,14 @@ func (d itemDelegate) Spacing() int                            { return 0 }
 func (d itemDelegate) Update(_ tea.Msg, _ *list.Model) tea.Cmd { return nil }
 
 func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list.Item) {
+	/* base style */
 	style := itemStyle
 
+	/* style selected item */
 	if index == m.Index() {
 		style = selectedStyle
 
+		/* use different style per flatform */
 		switch i := listItem.(type) {
 		case ItemWrapper[Channel]:
 			switch i.Data.Platform.(type) {
@@ -73,11 +75,13 @@ func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 		}
 	}
 
+	/* set text as Title return value */
 	var text string
 	if i, ok := listItem.(list.DefaultItem); ok {
 		text = i.Title()
 	}
 
+	/* set style for live channels */
 	switch i := listItem.(type) {
 	case ItemWrapper[Channel]:
 		if i.Data.Islive {
@@ -114,6 +118,10 @@ func tweakList(l list.Model) list.Model {
 	l.FilterInput.Prompt = "> "
 	l.SetShowFilter(true)
 
+	/* set keymaps */
+	l.KeyMap.NextPage.SetKeys("n")
+	l.KeyMap.PrevPage.SetKeys("p")
+
 	return l
 }
 
@@ -128,14 +136,10 @@ const (
 /* MODEL */
 type model struct {
 	state        state
-	current_list *list.Model
+	current_list list.Model
 
 	channels_list list.Model
 	videos_list   list.Model
-
-	// choice        itemWrapper
-	// choice_channel itemWrapper[Channel]
-	// choice_video   itemWrapper[Video]
 
 	choice any
 }
@@ -148,30 +152,26 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "l":
 			switch m.state {
 			case channels_list:
-				m.channels_list = *m.current_list
+				m.channels_list = m.current_list
 				index := m.channels_list.Index()
 				item := m.channels_list.SelectedItem().(ItemWrapper[Channel])
 
 				if !item.Data.Islive {
 					if reflect.ValueOf(item.Sublist).IsZero() {
 						videos := item.Data.Platform.GetVods(item.Data)
-
-						j, _ := json.Marshal(videos)
-						os.WriteFile("vod.txt", j, 0644)
-						// fmt.Println(len(videos))
-
 						item.Sublist = tweakList(list.New(convertToItems(videos), itemDelegate{}, 10, 20))
 						m.channels_list.SetItem(index, item)
 					}
 
-					m.current_list = &item.Sublist
+					m.videos_list = item.Sublist
+					m.current_list = m.videos_list
 					m.state = videos_list
 				} else {
 					m.choice = item
 					return m, tea.Quit
 				}
 			case videos_list:
-				m.videos_list = *m.current_list
+				m.videos_list = m.current_list
 				item := m.videos_list.SelectedItem().(ItemWrapper[Video])
 				m.choice = item
 				return m, tea.Quit
@@ -179,15 +179,14 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "h":
 			switch m.state {
 			case videos_list:
-				m.current_list = &m.channels_list
+				m.current_list = m.channels_list
 				m.state = channels_list
 			}
 		}
 	}
 
-	// var cmd tea.Cmd
 	l, cmd := m.current_list.Update(msg)
-	m.current_list = &l
+	m.current_list = l
 
 	return m, cmd
 }
@@ -215,7 +214,7 @@ func convertToItems[T any](items []T) []list.Item {
 func initialModel[T any](items []T) model {
 	m := model{}
 	m.channels_list = tweakList(list.New(convertToItems(items), itemDelegate{}, 10, 20))
-	m.current_list = &m.channels_list
+	m.current_list = m.channels_list
 	m.state = channels_list
 
 	return m
