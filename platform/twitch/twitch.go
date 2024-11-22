@@ -62,7 +62,7 @@ func (t Twitch) GetVods(channel types.Channel) []types.Video {
 	output, _ := exec.Command("sh", "-c",
 		fmt.Sprintf(`yt-dlp --flat-playlist --lazy-playlist --playlist-items ':20' --print '%%(title)s' --print '%%(webpage_url)s' '%s'`, videos_url)).Output()
 
-	fmt.Println(string(output))
+	// fmt.Println(string(output))
 
 	items := strings.Split(string(output), "\n")
 
