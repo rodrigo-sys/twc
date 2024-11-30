@@ -10,12 +10,16 @@ import (
 	"strings"
 	"sync"
 
-	. "twc/platform/kick"
-	. "twc/platform/twitch"
-	. "twc/platform/youtube"
-	. "twc/types"
-
+	. "twc/channel"
 	_ "twc/config"
+
+	. "twc/platforms/kick"
+	. "twc/platforms/twitch"
+	. "twc/platforms/youtube"
+
+	// . "twc/platform/youtube"
+
+	// . "twc/video"
 
 	"github.com/koki-develop/go-fzf"
 )
@@ -23,15 +27,29 @@ import (
 type Channels []Channel
 
 // td: this can be a function/method or it can be done another way
-var platforms = map[string]Platform{
-	"twitch":  Twitch{},
-	"youtube": Youtube{},
-	"kick":    Kick{},
+/*
+var channels_types = map[string]IChannel{
+	"twitch": &Twitch{},
+	// "youtube": Youtube{},
+	// "kick":    Kick{},
+}
+*/
+func getChannelType(type_string string) Channel {
+	switch type_string {
+	case "twitch":
+		return &Twitch{}
+	case "youtube":
+		return &Youtube{}
+	case "kick":
+		return &Kick{}
+	}
+	return nil
 }
 
 func (channels *Channels) CheckStatusSync() {
 	for i := range *channels {
-		(*channels)[i].Islive = (*channels)[i].Platform.CheckStatus((*channels)[i])
+		(*channels)[i].SetIslive((*channels)[i].CheckStatus())
+		// (*channels)[i].Islive = (*channels)[i].Platform.CheckStatus((*channels)[i])
 	}
 }
 
@@ -48,7 +66,8 @@ func (channels *Channels) CheckStatus() {
 			defer wg.Done()
 			defer func() { <-sem }()
 
-			(*channels)[i].Islive = (*channels)[i].Platform.CheckStatus((*channels)[i])
+			(*channels)[i].SetIslive((*channels)[i].CheckStatus())
+			// (*channels)[i].Islive = (*channels)[i].Platform.CheckStatus((*channels)[i])
 		}()
 	}
 
@@ -85,12 +104,24 @@ func parseChannels(channels_raw string) Channels {
 	/* td: Islive field initial value must be neutral */
 	var channels Channels
 	for index, record := range records {
-		channel := Channel{
-			Name:     record[0],
-			Platform: platforms[record[1]],
-			Position: index,
-			Islive:   false,
-		}
+		// channel := channels_types[record[1]]
+		channel := getChannelType(record[1])
+
+		// channel.SetName(record[0]) //td: testear este
+		channel.SetName(record[0]) //td: testear este
+		channel.SetPosition(index)
+		channel.SetIslive(false)
+		// fmt.Println(record[0])
+		// fmt.Println(record[1])
+
+		/*
+			channel := Channel{
+				Name:     record[0],
+				Platform: platforms[record[1]],
+				Position: index,
+				Islive:   false,
+			}
+		*/
 
 		channels = append(channels, channel)
 	}
@@ -102,11 +133,11 @@ func (channels *Channels) SortChannels() {
 	// td: understand this, and remove the commented if
 	sort.Slice((*channels), func(i int, j int) bool {
 		// if channels[i].islive && channels[j].islive {
-		if (*channels)[i].Islive == (*channels)[j].Islive {
-			return (*channels)[i].Islive
+		if (*channels)[i].Islive() == (*channels)[j].Islive() {
+			return (*channels)[i].Islive()
 		}
 
-		return !(*channels)[j].Islive
+		return !(*channels)[j].Islive()
 	})
 }
 
@@ -118,7 +149,7 @@ func (channels Channels) Menu() Channel {
 
 	var idxs []int
 
-	idxs, err = f.Find(channels, func(i int) string { return channels[i].Name })
+	idxs, err = f.Find(channels, func(i int) string { return channels[i].Name() })
 
 	if err != nil {
 		log.Fatal(err)
@@ -128,7 +159,7 @@ func (channels Channels) Menu() Channel {
 		return channels[i]
 	}
 
-	return Channel{}
+	return &BaseChannel{}
 }
 
 func (channels *Channels) FilterChannels(name string) /*Channels*/ {
@@ -139,7 +170,7 @@ func (channels *Channels) FilterChannels(name string) /*Channels*/ {
 
 	var filtered_channels Channels
 	for i := range *channels {
-		if (*channels)[i].Name == name {
+		if (*channels)[i].Name() == name {
 			filtered_channels = append(filtered_channels, (*channels)[i])
 		}
 	}

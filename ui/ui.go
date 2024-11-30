@@ -5,15 +5,17 @@ import (
 	"io"
 	"os"
 	"reflect"
-	. "twc/types"
+
+	. "twc/channel"
+	. "twc/video"
 
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
-	. "twc/platform/kick"
-	. "twc/platform/twitch"
-	. "twc/platform/youtube"
+	. "twc/platforms/kick"
+	. "twc/platforms/twitch"
+	. "twc/platforms/youtube"
 )
 
 /* ITEM */
@@ -25,9 +27,9 @@ type ItemWrapper[T any] struct {
 func (i ItemWrapper[T]) Title() string {
 	switch i := any(i.Data).(type) {
 	case Channel:
-		return i.Name
+		return i.Name()
 	case Video:
-		return i.Name
+		return i.Name()
 	}
 	return ""
 }
@@ -39,9 +41,9 @@ func (i ItemWrapper[T]) Description() string {
 func (i ItemWrapper[T]) FilterValue() string {
 	switch i := any(i.Data).(type) {
 	case Channel:
-		return i.Name
+		return i.Name()
 	case Video:
-		return i.Name
+		return i.Name()
 	}
 	return ""
 }
@@ -64,12 +66,12 @@ func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 		/* use different style per flatform */
 		switch i := listItem.(type) {
 		case ItemWrapper[Channel]:
-			switch i.Data.Platform.(type) {
-			case Youtube:
+			switch i.Data.(type) {
+			case *Youtube:
 				style = youtubeStyle
-			case Kick:
+			case *Kick:
 				style = kickStyle
-			case Twitch:
+			case *Twitch:
 				style = twitchStyle
 			}
 		}
@@ -84,7 +86,7 @@ func (d itemDelegate) Render(w io.Writer, m list.Model, index int, listItem list
 	/* set style for live channels */
 	switch i := listItem.(type) {
 	case ItemWrapper[Channel]:
-		if i.Data.Islive {
+		if i.Data.Islive() {
 			style = style.Foreground(lipgloss.Color("11"))
 		}
 	}
@@ -156,13 +158,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				index := m.channels_list.Index()
 				item := m.channels_list.SelectedItem().(ItemWrapper[Channel])
 
-				if !item.Data.Islive {
+				if !item.Data.Islive() {
 					if reflect.ValueOf(item.Sublist).IsZero() {
-						videos := item.Data.Platform.GetVods(item.Data)
+						videos := item.Data.GetVods()
 						item.Sublist = tweakList(list.New(convertToItems(videos), itemDelegate{}, 10, 20))
 						m.channels_list.SetItem(index, item)
 					}
-
 					m.videos_list = item.Sublist
 					m.current_list = m.videos_list
 					m.state = videos_list
@@ -218,6 +219,11 @@ func initialModel[T any](items []T) model {
 	m.state = channels_list
 
 	return m
+}
+
+func loguear(file_name string, text string) {
+	f, _ := os.OpenFile(file_name, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	f.WriteString(text)
 }
 
 /* THE MENU */
