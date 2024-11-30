@@ -41,7 +41,7 @@ func SetupConfig() {
 	os.MkdirAll(filepath.Dir(config_path), os.ModePerm)
 
 	// create config file
-	//td: think to add the ability to create config besides already exiss, overwrite_config
+	//td: think to add the ability to create config besides already exists, overwrite_config
 	if _, err := os.Stat(config_path); os.IsNotExist(err) {
 		createConfig()
 	}
