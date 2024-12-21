@@ -32,3 +32,14 @@ func DefaultInstallStrategy(ospackage_names ...string) error {
 
 	return ospackages.Install()
 }
+func InstallMpv() error {
+	return DefaultInstallStrategy("mpv", "mpv", "mpv.net")
+}
+
+func InstallYtdl() error {
+	return DefaultInstallStrategy("git", "git", "Git.Git")
+}
+
+func InstallGit() error {
+	return DefaultInstallStrategy("git", "git", "Git.Git")
+}
