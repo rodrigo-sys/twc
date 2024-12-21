@@ -46,3 +46,7 @@ func (b BaseInstaller) InstallPlayer() error {
 
 	return b.InstallOfficialPlayer()
 }
+
+func (b BaseInstaller) InstallOfficialChat() error {
+	return nil
+}
