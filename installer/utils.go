@@ -1,8 +1,11 @@
 package installer
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
+)
 )
 func IsInstalled(program string) bool {
 	if !filepath.IsAbs(program) {
