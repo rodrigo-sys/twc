@@ -18,4 +18,6 @@ func (p Ospackage) Install() error {
 
 	return nil
 }
+type system_type string
+type Ospackages map[system_type]Ospackage
 }
