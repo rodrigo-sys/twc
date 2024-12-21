@@ -4,6 +4,7 @@ import (
 )
 var (
 	ErrorOfficialChatEmpty   = fmt.Errorf("official_chat cannot be empty")
+	ErrorOfficialPlayerEmpty = fmt.Errorf("official_player cannot be empty")
 )
 
 type BaseInstaller struct {
@@ -30,4 +31,18 @@ func (b BaseInstaller) InstallChat() error {
 	}
 
 	return b.InstallOfficialChat()
+}
+
+func (b BaseInstaller) InstallPlayer() error {
+	if b.official_player == "" {
+		return ErrorOfficialPlayerEmpty
+	}
+
+	fmt.Println("installing player")
+	if b.player != "" && b.player != b.official_player {
+		fmt.Println("installing " + b.player)
+		return DefaultInstallStrategy(b.player)
+	}
+
+	return b.InstallOfficialPlayer()
 }
