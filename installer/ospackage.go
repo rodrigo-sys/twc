@@ -1,7 +1,12 @@
 package installer
+import (
+	"os/exec"
+	"runtime"
+)
 type Ospackage struct {
 	Name            string
 	Install_method  string
+	Aurhelper       string
 func (p Ospackage) Install() error {
 	if IsInstalled(p.Name) {
 		return nil
@@ -14,6 +19,11 @@ func (p Ospackage) Install() error {
 		return exec.Command("sh", "-c", "sudo apt-get install "+p.Name+" -y").Run()
 	case "pacman":
 		return exec.Command("sh", "-c", "sudo pacman -S "+p.Name+" --noconfirm").Run()
+	case "aurhelper":
+		if err := (Ospackage{Name: p.Aurhelper, Install_method: "pacman"}).Install(); err != nil {
+			return err
+		}
+		return exec.Command("sh", "-c", p.Aurhelper+" -S "+p.Name+" --noconfirm").Run()
 	}
 
 	return nil
