@@ -43,6 +43,9 @@ func InstallYtdl() error {
 func InstallGit() error {
 	return DefaultInstallStrategy("git", "git", "Git.Git")
 }
+func InstallNpm() error {
+	return DefaultInstallStrategy("npm", "npm", "OpenJS.NodeJS")
+}
 func InstallPip() error {
 	return DefaultInstallStrategy("python3-pip", "python-pip", "python")
 }
@@ -85,4 +88,13 @@ func InstallPipx() error {
 	}
 
 	return ospackages.Install()
+}
+
+func InstallFlatpak() error {
+	Ospackages{
+		"has_apt":    Ospackage{Name: "flatpak", Install_method: "apt"},
+		"has_pacman": Ospackage{Name: "flatpak", Install_method: "pacman"},
+	}.Install()
+
+	return exec.Command("sh", "-c", "sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo").Run()
 }

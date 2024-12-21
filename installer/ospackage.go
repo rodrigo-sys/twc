@@ -39,6 +39,11 @@ func (p Ospackage) Install() error {
 			return err
 		}
 		return exec.Command("sudo", "flatpak", "install", "-y", p.Name).Run()
+	case "npm":
+		if err := InstallNpm(); err != nil {
+			return err
+		}
+		return exec.Command("npm", "install", "-g", p.Name).Run()
 	}
 
 	return nil
