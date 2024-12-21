@@ -7,7 +7,9 @@ type Ospackage struct {
 	Name            string
 	Install_method  string
 	Manual_callback func() error
+	Extra_setup     func() error
 	Aurhelper       string
+}
 func (p Ospackage) Install() error {
 	if IsInstalled(p.Name) {
 		return nil
@@ -48,6 +50,10 @@ func (p Ospackage) Install() error {
 	case "manual":
 		return p.Manual_callback()
 	}
+	if p.Extra_setup != nil {
+		if err := p.Extra_setup(); err != nil {
+			return err
+		}
 	}
 
 	return nil
