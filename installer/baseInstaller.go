@@ -1,7 +1,9 @@
 package installer
+
 import (
 	"fmt"
 )
+
 var (
 	ErrorOfficialChatEmpty   = fmt.Errorf("official_chat cannot be empty")
 	ErrorOfficialPlayerEmpty = fmt.Errorf("official_player cannot be empty")
@@ -13,6 +15,25 @@ type BaseInstaller struct {
 	official_chat   string
 	official_player string
 }
+
+func (b BaseInstaller) Install() error {
+	err_str := ""
+
+	if err := b.InstallChat(); err != nil {
+		err_str += fmt.Sprintf("%w", err)
+	}
+
+	if err := b.InstallPlayer(); err != nil {
+		err_str += fmt.Sprintf("%w", err)
+	}
+
+	if err_str != "" {
+		return fmt.Errorf(err_str)
+	}
+
+	return nil
+}
+
 func (b BaseInstaller) InstallChat() error {
 	if b.official_chat == "" {
 		return ErrorOfficialChatEmpty
