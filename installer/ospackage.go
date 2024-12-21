@@ -20,6 +20,14 @@ func (p Ospackage) Install() error {
 }
 type system_type string
 type Ospackages map[system_type]Ospackage
+func (system_ospackages Ospackages) Install() error {
+	ospackage, err := system_ospackages.Select()
+	if err != nil {
+		return err
+	}
+
+	return ospackage.Install()
+}
 func (system_ospackages Ospackages) Select() (Ospackage, error) {
 	if pkg, ok := system_ospackages["any"]; ok {
 		return pkg, nil
