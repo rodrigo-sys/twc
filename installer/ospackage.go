@@ -24,6 +24,16 @@ func (p Ospackage) Install() error {
 			return err
 		}
 		return exec.Command("sh", "-c", p.Aurhelper+" -S "+p.Name+" --noconfirm").Run()
+	case "pip":
+		if err := InstallPip(); err != nil {
+			return err
+		}
+		return exec.Command("python", "-m", "pip", "install", "--user", p.Name).Run()
+	case "pipx":
+		if err := InstallPipx(); err != nil {
+			return err
+		}
+		return exec.Command("pipx", "install", p.Name).Run()
 	}
 
 	return nil

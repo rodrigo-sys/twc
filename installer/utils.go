@@ -43,3 +43,46 @@ func InstallYtdl() error {
 func InstallGit() error {
 	return DefaultInstallStrategy("git", "git", "Git.Git")
 }
+func InstallPip() error {
+	return DefaultInstallStrategy("python3-pip", "python-pip", "python")
+}
+func InstallPipx() error {
+	runEnsurePath := func() error {
+		// Locate pipx script path
+		localAppData := os.Getenv("LOCALAPPDATA")
+		if localAppData == "" {
+			return fmt.Errorf("LOCALAPPDATA not found.")
+		}
+
+		var pipxPath string
+		rootPath := filepath.Join(localAppData, "Packages")
+		_ = filepath.Walk(rootPath, func(path string, info os.FileInfo, err error) error {
+			if strings.Contains(path, "PythonSoftwareFoundation") && strings.Contains(path, "Scripts") {
+				pipxPath = filepath.Join(path, "pipx.exe")
+				return filepath.SkipDir
+			}
+			return nil
+		})
+
+		if pipxPath == "" {
+			return fmt.Errorf("Pipx script path not found.")
+		}
+
+		// Run pipx ensurepath
+		cmd := exec.Command(pipxPath, "ensurepath")
+		cmd.Stdout, cmd.Stderr = os.Stdout, os.Stderr
+		if err := cmd.Run(); err != nil {
+			return fmt.Errorf("Error running pipx ensurepath:", err)
+		}
+
+		return nil
+	}
+
+	ospackages := Ospackages{
+		"has_apt":    Ospackage{Name: "pipx", Install_method: "apt"},
+		"has_pacman": Ospackage{Name: "python-pipx", Install_method: "pacman"},
+		"has_winget": Ospackage{Name: "pipx", Install_method: "pip", Extra_setup: runEnsurePath},
+	}
+
+	return ospackages.Install()
+}
