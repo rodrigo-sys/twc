@@ -6,6 +6,7 @@ import (
 type Ospackage struct {
 	Name            string
 	Install_method  string
+	Manual_callback func() error
 	Aurhelper       string
 func (p Ospackage) Install() error {
 	if IsInstalled(p.Name) {
@@ -44,6 +45,9 @@ func (p Ospackage) Install() error {
 			return err
 		}
 		return exec.Command("npm", "install", "-g", p.Name).Run()
+	case "manual":
+		return p.Manual_callback()
+	}
 	}
 
 	return nil
