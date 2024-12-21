@@ -50,3 +50,21 @@ func (b BaseInstaller) InstallPlayer() error {
 func (b BaseInstaller) InstallOfficialChat() error {
 	return nil
 }
+
+func (b BaseInstaller) InstallOfficialPlayer() error {
+	if b.chat != "mpv" {
+		return nil
+	}
+
+	fmt.Println("installing ytdlp")
+	if err := InstallYtdl(); err != nil {
+		return fmt.Errorf("Error installing ytdlp: %w", err)
+	}
+
+	fmt.Println("installing mpv")
+	if err := InstallMpv(); err != nil {
+		return fmt.Errorf("Error installing mpv: %w", err)
+	}
+
+	return nil
+}
