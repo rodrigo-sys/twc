@@ -4,6 +4,14 @@ import (
 	"fmt"
 )
 
+type Installer interface {
+	Install() error
+	InstallChat() error
+	InstallPlayer() error
+	InstallOfficialChat() error
+	InstallOfficialPlayer() error
+}
+
 var (
 	ErrorOfficialChatEmpty   = fmt.Errorf("official_chat cannot be empty")
 	ErrorOfficialPlayerEmpty = fmt.Errorf("official_player cannot be empty")
