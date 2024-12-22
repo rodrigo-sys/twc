@@ -5,11 +5,11 @@ import (
 	. "twc/installer"
 )
 
-type kickInstaller struct {
+type KickInstaller struct {
 	BaseInstaller
 }
 
-func (k kickInstaller) InstallOfficialChat() error {
+func (k KickInstaller) InstallOfficialChat() error {
 	// exit if kichatty is already installed
 	if IsInstalled("kichatty") || IsInstalled("kichatty") {
 		return nil
