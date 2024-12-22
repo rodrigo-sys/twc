@@ -1,4 +1,9 @@
 package installer
+
+/*
+This package can be improved, but for now, it is convenient.
+*/
+
 import (
 	"fmt"
 	"os"
@@ -6,7 +11,14 @@ import (
 	"path/filepath"
 	"strings"
 )
+
+var (
+	ErrUnsupportedPkgMgr  = fmt.Errorf("not supported package manager")
+	ErrWingetNotInstalled = fmt.Errorf("winget not installed")
+	ErrRunningInstallCmd  = fmt.Errorf("error running install cmd")
+	ErrPipxPath           = fmt.Errorf("error ensuring pipx in path")
 )
+
 func IsInstalled(program string) bool {
 	if !filepath.IsAbs(program) {
 		_, err := exec.LookPath(program)
@@ -17,6 +29,7 @@ func IsInstalled(program string) bool {
 	return err == nil
 	// return os.IsExist(err)
 }
+
 func DefaultInstallStrategy(ospackage_names ...string) error {
 	var ospackages Ospackages
 	if len(ospackage_names) == 3 {
@@ -35,6 +48,7 @@ func DefaultInstallStrategy(ospackage_names ...string) error {
 
 	return ospackages.Install()
 }
+
 func InstallMpv() error {
 	return DefaultInstallStrategy("mpv", "mpv", "mpv.net")
 }
@@ -46,12 +60,20 @@ func InstallYtdl() error {
 func InstallGit() error {
 	return DefaultInstallStrategy("git", "git", "Git.Git")
 }
+
+func InstallPython() error {
+	return DefaultInstallStrategy("python")
+	// return DefaultInstallStrategy("python", "python", "Python.Python.3.12")
+}
+
 func InstallNpm() error {
 	return DefaultInstallStrategy("npm", "npm", "OpenJS.NodeJS")
 }
+
 func InstallPip() error {
 	return DefaultInstallStrategy("python3-pip", "python-pip", "python")
 }
+
 func InstallPipx() error {
 	runEnsurePath := func() error {
 		// Locate pipx script path

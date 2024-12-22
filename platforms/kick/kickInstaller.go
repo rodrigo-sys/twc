@@ -2,7 +2,9 @@ package platforms
 
 import (
 	"fmt"
-	. "twc/installer"
+	. "twc/installer/base-installer"
+	. "twc/installer/ospackage"
+	. "twc/installer/utils"
 )
 
 type KickInstaller struct {

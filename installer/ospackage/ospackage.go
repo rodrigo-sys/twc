@@ -1,8 +1,10 @@
 package installer
+
 import (
 	"os/exec"
 	"runtime"
 )
+
 type Ospackage struct {
 	Name            string
 	Install_method  string
@@ -10,6 +12,7 @@ type Ospackage struct {
 	Extra_setup     func() error
 	Aurhelper       string
 }
+
 func (p Ospackage) Install() error {
 	if IsInstalled(p.Name) {
 		return nil
@@ -50,16 +53,22 @@ func (p Ospackage) Install() error {
 	case "manual":
 		return p.Manual_callback()
 	}
+
 	if p.Extra_setup != nil {
 		if err := p.Extra_setup(); err != nil {
 			return err
 		}
+
 	}
 
 	return nil
 }
+
 type system_type string
 type Ospackages map[system_type]Ospackage
+
+// type system_ospackages map[system_type]Ospackage
+
 func (system_ospackages Ospackages) Install() error {
 	ospackage, err := system_ospackages.Select()
 	if err != nil {
@@ -68,6 +77,7 @@ func (system_ospackages Ospackages) Install() error {
 
 	return ospackage.Install()
 }
+
 func (system_ospackages Ospackages) Select() (Ospackage, error) {
 	if pkg, ok := system_ospackages["any"]; ok {
 		return pkg, nil

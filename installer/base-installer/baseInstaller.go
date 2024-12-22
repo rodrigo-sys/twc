@@ -18,10 +18,10 @@ var (
 )
 
 type BaseInstaller struct {
-	chat            string
-	player          string
-	official_chat   string
-	official_player string
+	Chat            string
+	Player          string
+	Official_chat   string
+	Official_player string
 }
 
 func (b BaseInstaller) Install() error {
@@ -43,34 +43,34 @@ func (b BaseInstaller) Install() error {
 }
 
 func (b BaseInstaller) InstallChat() error {
-	if b.official_chat == "" {
+	if b.Official_chat == "" {
 		return ErrorOfficialChatEmpty
 	}
 
 	fmt.Println("installing chat")
 
 	// if chat is popout just exit
-	if b.chat == "popout" {
+	if b.Chat == "popout" {
 		return nil
 	}
 
-	if b.chat != "" && b.chat != b.official_chat {
-		fmt.Println("installing " + b.chat)
-		return DefaultInstallStrategy(b.chat)
+	if b.Chat != "" && b.Chat != b.Official_chat {
+		fmt.Println("installing " + b.Chat)
+		return DefaultInstallStrategy(b.Chat)
 	}
 
 	return b.InstallOfficialChat()
 }
 
 func (b BaseInstaller) InstallPlayer() error {
-	if b.official_player == "" {
+	if b.Official_player == "" {
 		return ErrorOfficialPlayerEmpty
 	}
 
 	fmt.Println("installing player")
-	if b.player != "" && b.player != b.official_player {
-		fmt.Println("installing " + b.player)
-		return DefaultInstallStrategy(b.player)
+	if b.Player != "" && b.Player != b.Official_player {
+		fmt.Println("installing " + b.Player)
+		return DefaultInstallStrategy(b.Player)
 	}
 
 	return b.InstallOfficialPlayer()
@@ -81,7 +81,7 @@ func (b BaseInstaller) InstallOfficialChat() error {
 }
 
 func (b BaseInstaller) InstallOfficialPlayer() error {
-	if b.chat != "mpv" {
+	if b.Chat != "mpv" {
 		return nil
 	}
 
