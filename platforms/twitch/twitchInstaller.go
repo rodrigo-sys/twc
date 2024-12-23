@@ -11,7 +11,7 @@ type TwitchInstaller struct {
 	BaseInstaller
 }
 
-func (y TwitchInstaller) InstallOfficialChat() error {
+func (t TwitchInstaller) InstallOfficialChat() error {
 	// exit if chatterino is already installed
 	if IsInstalled("chatterino") || IsInstalled("com.chatterino.chatterino") || IsInstalled("/var/lib/flatpak/exports/bin/com.chatterino.chatterino") {
 		return nil
