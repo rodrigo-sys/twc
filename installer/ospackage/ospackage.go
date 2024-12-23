@@ -3,6 +3,7 @@ package installer
 import (
 	"os/exec"
 	"runtime"
+	. "twc/installer/utils"
 )
 
 type Ospackage struct {

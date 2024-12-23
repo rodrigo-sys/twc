@@ -2,6 +2,7 @@ package installer
 
 import (
 	"fmt"
+	. "twc/installer/ospackage"
 )
 
 type Installer interface {
