@@ -82,7 +82,7 @@ func (b BaseInstaller) InstallOfficialChat() error {
 }
 
 func (b BaseInstaller) InstallOfficialPlayer() error {
-	if b.Chat != "mpv" {
+	if b.Official_player != "mpv" {
 		return nil
 	}
 
