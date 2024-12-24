@@ -4,6 +4,7 @@ import (
 	. "twc/channel"
 	. "twc/channel/channels"
 	config "twc/config/utils"
+	_ "twc/installer/process-flags"
 	"twc/ui"
 	. "twc/video"
 )
