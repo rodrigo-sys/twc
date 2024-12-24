@@ -16,8 +16,8 @@ var (
 )
 
 type Installer struct {
-	Chat            string
-	Player          string
+	Custom_chat     string
+	Custom_player   string
 	Official_chat   string
 	Official_player string
 	OfficialInstallers
@@ -49,13 +49,13 @@ func (i Installer) InstallChat() error {
 	fmt.Println("installing chat")
 
 	// if chat is popout just exit
-	if i.Chat == "popout" {
+	if i.Custom_chat == "popout" {
 		return nil
 	}
 
-	if i.Chat != "" && i.Chat != i.Official_chat {
-		fmt.Println("installing " + i.Chat)
-		return DefaultInstallStrategy(i.Chat)
+	if i.Custom_chat != "" && i.Custom_chat != i.Official_chat {
+		fmt.Println("installing " + i.Custom_chat)
+		return DefaultInstallStrategy(i.Custom_chat)
 	}
 
 	return i.InstallOfficialChat()
@@ -67,9 +67,9 @@ func (i Installer) InstallPlayer() error {
 	}
 
 	fmt.Println("installing player")
-	if i.Player != "" && i.Player != i.Official_player {
-		fmt.Println("installing " + i.Player)
-		return DefaultInstallStrategy(i.Player)
+	if i.Custom_player != "" && i.Custom_player != i.Official_player {
+		fmt.Println("installing " + i.Custom_player)
+		return DefaultInstallStrategy(i.Custom_player)
 	}
 
 	return i.InstallOfficialPlayer()
