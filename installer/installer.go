@@ -2,7 +2,13 @@ package installer
 
 import (
 	"fmt"
+	"os"
+	config "twc/config/utils"
 	. "twc/installer/ospackage"
+
+	. "twc/platforms/kick"
+	. "twc/platforms/twitch"
+	. "twc/platforms/youtube"
 )
 
 type OfficialInstallers interface {
@@ -48,8 +54,8 @@ func (i Installer) InstallChat() error {
 
 	fmt.Println("installing chat")
 
-	// if chat is popout just exit
 	if i.Custom_chat == "popout" {
+		i.setChatToPopoutInConfig()
 		return nil
 	}
 
@@ -75,29 +81,18 @@ func (i Installer) InstallPlayer() error {
 	return i.InstallOfficialPlayer()
 }
 
-/*
-func (b BaseInstaller) InstallOfficialChat() error {
-	fmt.Println("base InstallOfficialChat")
-	return nil
+func (i Installer) setChatToPopoutInConfig() {
+	var config_pair string
+	switch i.OfficialInstallers.(type) {
+	case KickInstallers:
+		config_pair = "KICK_CHAT=popout"
+	case TwitchInstallers:
+		config_pair = "TWITCH_CHAT=popout"
+	case YoutubeInstallers:
+		config_pair = "YOUTUBE_CHAT=popout"
+	}
+
+	file, _ := os.OpenFile(config.GetConfigPath(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	defer file.Close()
+	file.WriteString(config_pair)
 }
-*/
-
-/*
-func (b BaseInstaller) InstallOfficialPlayer() error {
-	if b.Official_player != "mpv" {
-		return nil
-	}
-
-	fmt.Println("installing ytdlp")
-	if err := InstallYtdl(); err != nil {
-		return fmt.Errorf("Error installing ytdlp: %w", err)
-	}
-
-	fmt.Println("installing mpv")
-	if err := InstallMpv(); err != nil {
-		return fmt.Errorf("Error installing mpv: %w", err)
-	}
-
-	return nil
-}
-*/
