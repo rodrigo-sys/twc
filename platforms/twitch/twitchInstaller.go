@@ -2,16 +2,14 @@ package platforms
 
 import (
 	"fmt"
-	. "twc/installer/base-installer"
 	. "twc/installer/ospackage"
 	. "twc/installer/utils"
 )
 
-type TwitchInstaller struct {
-	BaseInstaller
+type TwitchInstallers struct {
 }
 
-func (t TwitchInstaller) InstallOfficialChat() error {
+func (t TwitchInstallers) InstallOfficialChat() error {
 	// exit if chatterino is already installed
 	if IsInstalled("chatterino") || IsInstalled("com.chatterino.chatterino") || IsInstalled("/var/lib/flatpak/exports/bin/com.chatterino.chatterino") {
 		return nil
@@ -25,4 +23,9 @@ func (t TwitchInstaller) InstallOfficialChat() error {
 		"has_pacman":    Ospackage{Name: "app/com.chatterino.chatterino/x86_64/stable", Install_method: "flatpak"},
 		"has_winget":    Ospackage{Name: "ChatterinoTeam.Chatterino", Install_method: "winget"},
 	}.Install()
+}
+
+func (t TwitchInstallers) InstallOfficialPlayer() error {
+	fmt.Println("installing mpv")
+	return InstallMpv()
 }

@@ -5,10 +5,7 @@ import (
 	. "twc/installer/ospackage"
 )
 
-type Installer interface {
-	Install() error
-	InstallChat() error
-	InstallPlayer() error
+type OfficialInstallers interface {
 	InstallOfficialChat() error
 	InstallOfficialPlayer() error
 }
@@ -18,21 +15,22 @@ var (
 	ErrorOfficialPlayerEmpty = fmt.Errorf("official_player cannot be empty")
 )
 
-type BaseInstaller struct {
+type Installer struct {
 	Chat            string
 	Player          string
 	Official_chat   string
 	Official_player string
+	OfficialInstallers
 }
 
-func (b BaseInstaller) Install() error {
+func (i Installer) Install() error {
 	err_str := ""
 
-	if err := b.InstallChat(); err != nil {
+	if err := i.InstallChat(); err != nil {
 		err_str += fmt.Sprintf("%w", err)
 	}
 
-	if err := b.InstallPlayer(); err != nil {
+	if err := i.InstallPlayer(); err != nil {
 		err_str += fmt.Sprintf("%w", err)
 	}
 
@@ -43,44 +41,48 @@ func (b BaseInstaller) Install() error {
 	return nil
 }
 
-func (b BaseInstaller) InstallChat() error {
-	if b.Official_chat == "" {
+func (i Installer) InstallChat() error {
+	if i.Official_chat == "" {
 		return ErrorOfficialChatEmpty
 	}
 
 	fmt.Println("installing chat")
 
 	// if chat is popout just exit
-	if b.Chat == "popout" {
+	if i.Chat == "popout" {
 		return nil
 	}
 
-	if b.Chat != "" && b.Chat != b.Official_chat {
-		fmt.Println("installing " + b.Chat)
-		return DefaultInstallStrategy(b.Chat)
+	if i.Chat != "" && i.Chat != i.Official_chat {
+		fmt.Println("installing " + i.Chat)
+		return DefaultInstallStrategy(i.Chat)
 	}
 
-	return b.InstallOfficialChat()
+	return i.InstallOfficialChat()
 }
 
-func (b BaseInstaller) InstallPlayer() error {
-	if b.Official_player == "" {
+func (i Installer) InstallPlayer() error {
+	if i.Official_player == "" {
 		return ErrorOfficialPlayerEmpty
 	}
 
 	fmt.Println("installing player")
-	if b.Player != "" && b.Player != b.Official_player {
-		fmt.Println("installing " + b.Player)
-		return DefaultInstallStrategy(b.Player)
+	if i.Player != "" && i.Player != i.Official_player {
+		fmt.Println("installing " + i.Player)
+		return DefaultInstallStrategy(i.Player)
 	}
 
-	return b.InstallOfficialPlayer()
+	return i.InstallOfficialPlayer()
 }
 
+/*
 func (b BaseInstaller) InstallOfficialChat() error {
+	fmt.Println("base InstallOfficialChat")
 	return nil
 }
+*/
 
+/*
 func (b BaseInstaller) InstallOfficialPlayer() error {
 	if b.Official_player != "mpv" {
 		return nil
@@ -98,3 +100,4 @@ func (b BaseInstaller) InstallOfficialPlayer() error {
 
 	return nil
 }
+*/

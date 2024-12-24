@@ -2,16 +2,14 @@ package platforms
 
 import (
 	"fmt"
-	. "twc/installer/base-installer"
 	. "twc/installer/ospackage"
 	. "twc/installer/utils"
 )
 
-type YoutubeInstaller struct {
-	BaseInstaller
+type YoutubeInstallers struct {
 }
 
-func (y YoutubeInstaller) InstallOfficialChat() error {
+func (y YoutubeInstallers) InstallOfficialChat() error {
 	// exit if pytchatty is already installed
 	if IsInstalled("pytchatty") {
 		return nil
@@ -29,4 +27,9 @@ func (y YoutubeInstaller) InstallOfficialChat() error {
 	Ospackage{Name: "git+https://github.com/rodrigo-sys/pytchatty", Install_method: "pipx"}.Install()
 
 	return nil
+}
+
+func (y YoutubeInstallers) InstallOfficialPlayer() error {
+	fmt.Println("installing mpv")
+	return InstallMpv()
 }

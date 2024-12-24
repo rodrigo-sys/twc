@@ -28,6 +28,10 @@ func DefaultInstallStrategy(ospackage_names ...string) error {
 }
 
 func InstallMpv() error {
+	if err := InstallYtdl(); err != nil {
+		return fmt.Errorf("Error installing ytdlp: %w", err)
+	}
+
 	return DefaultInstallStrategy("mpv", "mpv", "mpv.net")
 }
 
@@ -45,6 +49,16 @@ func InstallPython() error {
 }
 
 func InstallNpm() error {
+	/* td: si el prefix esta en no home */
+	/* tengo que usar sudo */
+	/* si no tiene npm instaldo un prefix puedo cambiarlo a home*/
+	/* npx puppeteer browsers install chrome */
+	/* parece que con sudo funciona
+	no se que pasa si usas si sudo cuando el prefix si esta en home
+	no si se instala en otro lado
+	puede haber un chequeo si no esta en home
+	*/
+
 	return DefaultInstallStrategy("npm", "npm", "OpenJS.NodeJS")
 }
 

@@ -2,18 +2,16 @@ package platforms
 
 import (
 	"fmt"
-	. "twc/installer/base-installer"
 	. "twc/installer/ospackage"
 	. "twc/installer/utils"
 )
 
-type KickInstaller struct {
-	BaseInstaller
+type KickInstallers struct {
 }
 
-func (k KickInstaller) InstallOfficialChat() error {
+func (k KickInstallers) InstallOfficialChat() error {
 	// exit if kichatty is already installed
-	if IsInstalled("kichatty") || IsInstalled("kichatty") {
+	if IsInstalled("kichatty") {
 		return nil
 	}
 
@@ -22,4 +20,9 @@ func (k KickInstaller) InstallOfficialChat() error {
 	return Ospackages{
 		"any": Ospackage{Name: "https://github.com/rodrigo-sys/kichatty", Install_method: "npm"},
 	}.Install()
+}
+
+func (k KickInstallers) InstallOfficialPlayer() error {
+	fmt.Println("installing mpv")
+	return InstallMpv()
 }
