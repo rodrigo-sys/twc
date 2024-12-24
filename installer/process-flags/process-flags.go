@@ -81,6 +81,7 @@ func init() {
 		platform_to_install = strings.Split(*platforms, " ")
 	}
 
+	// run the installers
 	for _, platform := range platform_to_install {
 		if installer, exists := installers[platform]; exists {
 			fmt.Println("installing " + platform)
