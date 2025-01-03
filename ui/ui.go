@@ -1,14 +1,5 @@
 package ui
 
-/*
-ver lo de loading y
-los cmd
-https://github.com/charmbracelet/bubbletea/tree/main/tutorials/commands
-
-focus
-spinner
-*/
-
 import (
 	"fmt"
 	"io"
@@ -19,6 +10,7 @@ import (
 	. "twc/video"
 
 	"github.com/charmbracelet/bubbles/list"
+	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
@@ -147,6 +139,7 @@ const (
 
 /* MODEL */
 type model struct {
+	spinner      spinner.Model
 	state        state
 	current_list list.Model
 
@@ -158,6 +151,7 @@ type model struct {
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
+
 	case vodsListMsg:
 		index := m.channels_list.Index()
 		item := m.channels_list.SelectedItem().(ItemWrapper[Channel])
@@ -169,6 +163,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.current_list = m.videos_list
 		m.state = videos_list
 		return m, nil
+
+	case spinner.TickMsg:
+		var cmd tea.Cmd
+		m.spinner, cmd = m.spinner.Update(msg)
+		return m, cmd
+
 	case tea.KeyMsg:
 		keypress := msg.String()
 		switch keypress {
@@ -181,7 +181,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				if !item.Data.Islive() {
 					if reflect.ValueOf(item.Sublist).IsZero() {
 						m.state = loading
-						return m, getVodsList(item)
+						return m, tea.Batch(m.spinner.Tick, getVodsList(item))
 					}
 					m.videos_list = item.Sublist
 					m.current_list = m.videos_list
@@ -218,7 +218,7 @@ func (m model) Init() tea.Cmd {
 func (m model) View() string {
 	// return m.current_list.View()
 	if m.state == loading {
-		return "loading ..."
+		return m.spinner.View()
 	}
 	return m.current_list.View()
 }
@@ -249,6 +249,11 @@ func initialModel[T any](items []T) model {
 	m.channels_list = tweakList(list.New(convertToItems(items), itemDelegate{}, 10, 20))
 	m.current_list = m.channels_list
 	m.state = channels_list
+
+	s := spinner.New()
+	s.Spinner = spinner.Dot
+	s.Style = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
+	m.spinner = s
 
 	return m
 }
