@@ -1,5 +1,14 @@
 package ui
 
+/*
+ver lo de loading y
+los cmd
+https://github.com/charmbracelet/bubbletea/tree/main/tutorials/commands
+
+focus
+spinner
+*/
+
 import (
 	"fmt"
 	"io"
@@ -133,6 +142,7 @@ type state int
 const (
 	channels_list state = iota
 	videos_list
+	loading
 )
 
 /* MODEL */
@@ -148,6 +158,17 @@ type model struct {
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
+	case vodsListMsg:
+		index := m.channels_list.Index()
+		item := m.channels_list.SelectedItem().(ItemWrapper[Channel])
+
+		item.Sublist = list.Model(msg)
+		m.channels_list.SetItem(index, item)
+
+		m.videos_list = item.Sublist
+		m.current_list = m.videos_list
+		m.state = videos_list
+		return m, nil
 	case tea.KeyMsg:
 		keypress := msg.String()
 		switch keypress {
@@ -155,14 +176,12 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			switch m.state {
 			case channels_list:
 				m.channels_list = m.current_list
-				index := m.channels_list.Index()
 				item := m.channels_list.SelectedItem().(ItemWrapper[Channel])
 
 				if !item.Data.Islive() {
 					if reflect.ValueOf(item.Sublist).IsZero() {
-						videos := item.Data.GetVods()
-						item.Sublist = tweakList(list.New(convertToItems(videos), itemDelegate{}, 10, 20))
-						m.channels_list.SetItem(index, item)
+						m.state = loading
+						return m, getVodsList(item)
 					}
 					m.videos_list = item.Sublist
 					m.current_list = m.videos_list
@@ -197,7 +216,20 @@ func (m model) Init() tea.Cmd {
 }
 
 func (m model) View() string {
+	// return m.current_list.View()
+	if m.state == loading {
+		return "loading ..."
+	}
 	return m.current_list.View()
+}
+
+/* CMD */
+type vodsListMsg list.Model
+
+func getVodsList(item ItemWrapper[Channel]) tea.Cmd {
+	return func() tea.Msg {
+		return vodsListMsg(tweakList(list.New(convertToItems(item.Data.GetVods()), itemDelegate{}, 10, 20)))
+	}
 }
 
 /* HELPERS */
