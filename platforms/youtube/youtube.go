@@ -41,9 +41,8 @@ func (y Youtube) OpenChannel() {
 	url := y.GetUrl()
 	webpage_url, _ := exec.Command("sh", "-c", fmt.Sprintf("yt-dlp --print webpage_url '%s'", url)).Output()
 
-	pytchat_path := os.Getenv("PYTCHAT_PATH")
 	exec.Command("mpv", url).Start()
-	exec.Command("sh", "-c", fmt.Sprintf(`"$TERMINAL" sh -c "'%s' '%s'"`, pytchat_path, string(webpage_url))).Start()
+	exec.Command(os.Getenv("YOUTUBECHAT_PATH"), string(webpage_url)).Start()
 }
 
 func (y Youtube) GetVods() Videos {
