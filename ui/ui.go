@@ -170,6 +170,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, cmd
 
 	case tea.KeyMsg:
+		if m.current_list.FilterState() == 1 {
+			break
+		}
+
 		keypress := msg.String()
 		switch keypress {
 		case "l":
