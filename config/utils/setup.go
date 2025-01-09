@@ -22,9 +22,18 @@ func createConfig() {
 		url := "https://raw.githubusercontent.com/rodrigo-sys/twc/refs/heads/main/.env.example"
 		response, _ := http.Get(url)
 		defer response.Body.Close()
-		source_file = response.Body
-		// defer source_file.Close()
-		// td: replace <user> wih os.UserConfigDir
+
+		homeDir, _ := os.UserHomeDir()
+		configDir, _ := os.UserConfigDir()
+		bodyBytes, _ := io.ReadAll(response.Body)
+
+		// replace placeholders with actual directory paths
+		body := strings.ReplaceAll(string(bodyBytes), "<your user home dir>", homeDir)
+		body = strings.ReplaceAll(body, "<your config dir>", configDir)
+
+		// create a new reader with the modified content
+		source_file = strings.NewReader(body)
+
 	} else {
 		source_file, _ = os.Open(example_config_path)
 		// defer source_file.Close()
