@@ -34,7 +34,7 @@ var channels_types = map[string]IChannel{
 	// "kick":    Kick{},
 }
 */
-func getChannelType(type_string string) Channel {
+func GetChannelType(type_string string) Channel {
 	switch type_string {
 	case "twitch":
 		return &Twitch{}
@@ -104,15 +104,11 @@ func parseChannels(channels_raw string) Channels {
 	/* td: Islive field initial value must be neutral */
 	var channels Channels
 	for index, record := range records {
-		// channel := channels_types[record[1]]
-		channel := getChannelType(record[1])
+		channel := GetChannelType(record[1])
 
-		// channel.SetName(record[0]) //td: testear este
-		channel.SetName(record[0]) //td: testear este
+		channel.SetName(record[0])
 		channel.SetPosition(index)
 		channel.SetIslive(false)
-		// fmt.Println(record[0])
-		// fmt.Println(record[1])
 
 		/*
 			channel := Channel{
