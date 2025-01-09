@@ -56,7 +56,7 @@ func handleOpenChannel(openChannel string) {
 		var channels Channels
 		channels.GetChannels()
 		channels.FilterChannels(channelParts[0])
-		if len(channels) == 0 {
+		if len(channels) != 0 {
 			channels[0].OpenChannel()
 		} else {
 			fmt.Println("channel not found")
