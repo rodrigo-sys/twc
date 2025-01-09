@@ -1,6 +1,10 @@
 package main
 
 import (
+	"flag"
+	"fmt"
+	"os"
+	"strings"
 	. "twc/channel"
 	. "twc/channel/channels"
 	config "twc/config/utils"
@@ -11,7 +15,17 @@ import (
 func main() {
 	config.SetupConfig()
 
-	// /*
+	// flags
+	openChannel := flag.String("o", "", "open channel")
+	flag.Parse()
+
+	switch {
+	case *openChannel != "":
+		handleOpenChannel(*openChannel)
+		os.Exit(0)
+	}
+
+	// default behavior
 	var channels Channels
 	channels.GetChannels()
 	channels.CheckStatus()
@@ -25,24 +39,23 @@ func main() {
 	case ui.ItemWrapper[Video]:
 		choice.Data.Open()
 	}
-	// */
+}
 
-	/* legacy menu
-	var channels Channels
-	channels.GetChannels()
-	channels.CheckStatus()
-	channels.SortChannels()
+func handleOpenChannel(openChannel string) {
+	channelParts := strings.Split(openChannel, " ")
 
-	selected := channels.Menu()
-
-	if selected.Islive() {
-		selected.OpenChannel()
+	if len(channelParts) == 2 {
+		channel := GetChannelType(channelParts[1])
+		channel.SetName(channelParts[0])
+		channel.OpenChannel()
 	} else {
-		//td: return Videos type in GetVods
-		var videos Videos
-		videos = selected.GetVods()
-		vod := videos.Menu()
-		vod.Open()
+		var channels Channels
+		channels.GetChannels()
+		channels.FilterChannels(channelParts[0])
+		if len(channels) == 0 {
+			channels[0].OpenChannel()
+		} else {
+			fmt.Println("channel not found")
+		}
 	}
-	*/
 }
