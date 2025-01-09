@@ -12,12 +12,14 @@ func createConfig() {
 	var source_file io.Reader
 	example_config_path := os.Getenv("TWC_EXAMPLE_CONFIG_PATH")
 
-	fmt.Println("example config:")
-	fmt.Println(example_config_path)
-	fmt.Println("fin")
+	/*
+		fmt.Println("example config:")
+		fmt.Println(example_config_path)
+		fmt.Println("fin")
+	*/
 
 	if example_config_path == "" {
-		url := "https://raw.githubusercontent.com/rodrigo-sys/telescope-mantoc/main/.env.example"
+		url := "https://raw.githubusercontent.com/rodrigo-sys/twc/refs/heads/main/.env.example"
 		response, _ := http.Get(url)
 		defer response.Body.Close()
 		source_file = response.Body
