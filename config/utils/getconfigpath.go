@@ -1,14 +1,17 @@
 package config
 
-import "os"
+import (
+	"os"
+	"path/filepath"
+)
 
 func GetConfigPath() string {
 	var default_config_path string
 	var config_path string
 
 	if os.Getenv("TWC_CONFIG_PATH") == "" {
-		home, _ := os.UserHomeDir()
-		default_config_path = home + "/.config/twc/config.env"
+		config_dir, _ := os.UserConfigDir()
+		default_config_path = filepath.Join(config_dir, "twc", "config.env")
 
 		config_path = default_config_path
 	} else {
