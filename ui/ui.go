@@ -203,6 +203,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "h":
 			switch m.state {
 			case videos_list:
+				if reflect.ValueOf(m.channels_list).IsZero() {
+					break
+				}
 				m.current_list = m.channels_list
 				m.state = channels_list
 			}
@@ -250,9 +253,19 @@ func convertToItems[T any](items []T) []list.Item {
 
 func initialModel[T any](items []T) model {
 	m := model{}
-	m.channels_list = tweakList(list.New(convertToItems(items), itemDelegate{}, 10, 20))
-	m.current_list = m.channels_list
-	m.state = channels_list
+
+	switch any(items).(type) {
+	// case Channels:
+	case []Channel:
+		m.channels_list = tweakList(list.New(convertToItems(items), itemDelegate{}, 10, 20))
+		m.current_list = m.channels_list
+		m.state = channels_list
+	// case Videos:
+	case []Video:
+		m.videos_list = tweakList(list.New(convertToItems(items), itemDelegate{}, 10, 20))
+		m.current_list = m.videos_list
+		m.state = videos_list
+	}
 
 	s := spinner.New()
 	s.Spinner = spinner.Dot
