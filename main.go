@@ -17,11 +17,15 @@ func main() {
 
 	// flags
 	openChannel := flag.String("o", "", "open channel")
+	viewVods := flag.String("v", "", "view vods of channel")
 	flag.Parse()
 
 	switch {
 	case *openChannel != "":
 		handleOpenChannel(*openChannel)
+		os.Exit(0)
+	case *viewVods != "":
+		handleViewVods(*viewVods)
 		os.Exit(0)
 	}
 
@@ -56,6 +60,41 @@ func handleOpenChannel(openChannel string) {
 			channels[0].OpenChannel()
 		} else {
 			fmt.Println("channel not found")
+		}
+	}
+}
+
+func handleViewVods(viewVods string) {
+	channelParts := strings.Split(viewVods, " ")
+
+	if len(channelParts) == 2 {
+		channel := GetChannelType(channelParts[1])
+		channel.SetName(channelParts[0])
+
+		videos := channel.GetVods()
+		if len(videos) == 0 {
+			fmt.Println("channel does not have streams")
+		} else {
+			if video := ui.Menu(videos); video != nil {
+				video.(ui.ItemWrapper[Video]).Data.Open()
+			}
+		}
+	} else {
+		var channels Channels
+		channels.GetChannels()
+		channels.FilterChannels(channelParts[0])
+
+		if len(channels) == 0 {
+			fmt.Println("channel not found")
+		}
+
+		videos := channels[0].GetVods()
+		if len(videos) == 0 {
+			fmt.Println("channel does not have streams")
+		} else {
+			if video := ui.Menu(videos); video != nil {
+				video.(ui.ItemWrapper[Video]).Data.Open()
+			}
 		}
 	}
 }
