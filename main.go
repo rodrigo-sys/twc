@@ -4,12 +4,15 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"os/exec"
 	"strings"
 	. "twc/channel"
 	. "twc/channel/channels"
 	config "twc/config/utils"
 	"twc/ui"
 	. "twc/video"
+
+	"golang.org/x/term"
 )
 
 func main() {
@@ -30,6 +33,12 @@ func main() {
 	}
 
 	// default behavior
+
+	if !term.IsTerminal(int(os.Stdin.Fd())) {
+		exec.Command(os.Getenv("TERMINAL"), os.Args...).Run()
+		os.Exit(0)
+	}
+
 	var channels Channels
 	channels.GetChannels()
 	channels.CheckStatus()
