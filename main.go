@@ -34,6 +34,7 @@ func main() {
 
 	// default behavior
 
+	// open script in new terminal if it was invoked outside of a tty (via gui launcher eg. dmenu)
 	if !term.IsTerminal(int(os.Stdin.Fd())) {
 		exec.Command(os.Getenv("TERMINAL"), os.Args...).Run()
 		os.Exit(0)
