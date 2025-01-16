@@ -26,6 +26,7 @@ func (y Youtube) GetPopoutChatUrl() string {
 	id, _ := exec.Command("yt-dlp", "--print", "id", y.GetUrl()).Output()
 	return fmt.Sprintf("https://www.youtube.com/live_chat?is_popout=1&v=%s", id)
 }
+
 func (y Youtube) CheckStatus() bool {
 	response, error := http.Get(y.GetUrl())
 	if error != nil {
