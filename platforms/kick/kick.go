@@ -20,6 +20,10 @@ func (k Kick) GetUrl() string {
 	return url
 }
 
+func (k Kick) GetPopoutChatUrl() string {
+	return fmt.Sprintf("https://kick.com/popout/%s/chat", k.BaseChannel.Name())
+}
+
 func (k Kick) CheckStatus() bool {
 	/*
 		err := exec.Command("sh", "-c", fmt.Sprintf("yt-dlp --print live_status --no-warnings '%s'", channel.Platform.GetUrl(channel))).Run()
@@ -45,8 +49,15 @@ func (k Kick) OpenChannel() {
 	url := "https://kick.com/" + k.BaseChannel.Name() //+ "/livestream"
 	exec.Command("mpv", url).Start()
 
-	exec.Command(os.Getenv("KICKCHAT_PATH"), k.BaseChannel.Name()).Start()
+	// open stream in player
+	exec.Command("mpv", url).Start()
 
+	// open chat
+	if os.Getenv("KICKCHAT_PATH") == "" {
+		k.OpenPopoutChat(k.GetPopoutChatUrl())
+	} else {
+		exec.Command(os.Getenv("KICKCHAT_PATH"), k.BaseChannel.Name()).Start()
+	}
 	/*
 		// using direct url
 		var scrapper_json map[string]interface{}
