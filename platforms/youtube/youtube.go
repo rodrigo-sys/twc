@@ -46,8 +46,15 @@ func (y Youtube) OpenChannel() {
 	url := y.GetUrl()
 	webpage_url, _ := exec.Command("sh", "-c", fmt.Sprintf("yt-dlp --print webpage_url '%s'", url)).Output()
 
+	// open stream in player
 	exec.Command("mpv", url).Start()
-	exec.Command(os.Getenv("YOUTUBECHAT_PATH"), string(webpage_url)).Start()
+
+	// open chat
+	if os.Getenv("YOUTUBECHAT_PATH") == "" {
+		y.OpenPopoutChat(y.GetPopoutChatUrl())
+	} else {
+		exec.Command(os.Getenv("YOUTUBECHAT_PATH"), string(webpage_url)).Start()
+	}
 }
 
 func (y Youtube) GetVods() Videos {
