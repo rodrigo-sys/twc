@@ -13,6 +13,29 @@ type Browser struct {
 	Cmd exec.Cmd
 }
 
+
+func NewBrower() Browser {
+	var cmd exec.Cmd
+	var browser_string string
+
+	if os.Getenv("TWC_BROWSER") == "" {
+		browser_string, _ = GetDefaultBrowser()
+	} else {
+		browser_string = os.Getenv("TWC_BROWSER")
+	}
+
+	if match, _ := regexp.MatchString(`^['"]`, browser_string); match {
+		r, _ := regexp.Compile(`['"](.*)['"] (.*)`)
+		match := r.FindStringSubmatch(browser_string)
+		cmd.Args = append(cmd.Args, match[1])
+		browser_string = match[2]
+	}
+
+	cmd.Args = append(cmd.Args, strings.Split(browser_string, " ")...)
+
+	return Browser{Cmd: cmd}
+}
+
 func GetDefaultBrowser() (string, error) {
 	// user BROWSER normal tamebien
 	var browserPath string
