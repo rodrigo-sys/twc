@@ -1,6 +1,9 @@
 package channel
 
-import . "twc/video"
+import (
+	. "twc/utils/browser"
+	. "twc/video"
+)
 
 type Channel interface {
 	CheckStatus() bool
@@ -8,7 +11,7 @@ type Channel interface {
 	GetVods() Videos
 	OpenChannel()
 	GetPopoutChatUrl() string
-	OpenPopoutChat()
+	OpenPopoutChat(url string)
 
 	Name() string
 	Islive() bool
@@ -40,8 +43,22 @@ func (c *BaseChannel) GetVods() Videos {
 func (c *BaseChannel) GetPopoutChatUrl() string {
 	return ""
 }
+
 func (c *BaseChannel) OpenPopoutChat(url string) {
+	browser := NewBrower()
+	original_args := browser.Cmd.Args
+
+	// browser.Cmd.Args = append([]string{browser.Cmd.Args[0]}, append([]string{"--app=%u"}, browser.Cmd.Args[1:]...)...)
+	browser.Cmd.Args = append(browser.Cmd.Args, "--app=%u")
+
+	if err := browser.OpenUrl(c.GetPopoutChatUrl()); err != nil {
+		browser.Cmd.Args = original_args
+		// browser.OpenUrl(c.GetPopoutChatUrl())
+		browser.OpenUrl(url)
+		return
+	}
 }
+
 /* getters */
 func (c *BaseChannel) Name() string {
 	return c.name
