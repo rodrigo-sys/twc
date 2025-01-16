@@ -7,6 +7,8 @@ type Channel interface {
 	GetUrl() string
 	GetVods() Videos
 	OpenChannel()
+	GetPopoutChatUrl() string
+	OpenPopoutChat()
 
 	Name() string
 	Islive() bool
@@ -35,6 +37,11 @@ func (c *BaseChannel) GetVods() Videos {
 	return Videos{}
 }
 
+func (c *BaseChannel) GetPopoutChatUrl() string {
+	return ""
+}
+func (c *BaseChannel) OpenPopoutChat(url string) {
+}
 /* getters */
 func (c *BaseChannel) Name() string {
 	return c.name
