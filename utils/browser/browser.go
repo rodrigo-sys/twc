@@ -13,6 +13,23 @@ type Browser struct {
 	Cmd exec.Cmd
 }
 
+func (b Browser) OpenUrl(url string) error {
+	var cmd exec.Cmd
+
+	r := regexp.MustCompile(`%u|%U`)
+	for _, arg := range b.Cmd.Args {
+		cmd.Args = append(cmd.Args, r.ReplaceAllString(arg, url))
+	}
+
+	return exec.Command(cmd.Args[0], cmd.Args[1:]...).Run()
+	/*
+		output, err := exec.Command(cmd.Args[0], cmd.Args[1:]...).CombinedOutput()
+		if err != nil {
+			fmt.Println(err)
+			fmt.Println(string(output))
+		}
+	*/
+}
 
 func NewBrower() Browser {
 	var cmd exec.Cmd
