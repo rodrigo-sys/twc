@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"os/exec"
 	"strings"
 	. "twc/channel"
@@ -23,6 +24,10 @@ func (t Twitch) GetUrl() string {
 	return url
 }
 
+func (t Twitch) GetPopoutChatUrl() string {
+	return fmt.Sprintf("https://www.twitch.tv/popout/%s/chat?popout=", t.BaseChannel.Name())
+}
+
 func (t Twitch) CheckStatus() bool {
 	response, error := http.Get(t.GetUrl())
 	if error != nil {
@@ -38,8 +43,16 @@ func (t Twitch) CheckStatus() bool {
 
 func (t Twitch) OpenChannel() {
 	url := t.GetUrl()
+
+	// open stream in player
 	exec.Command("mpv", url).Start()
-	exec.Command("chatterino", "-c", t.BaseChannel.Name()).Start()
+
+	// open chat
+	if os.Getenv("TWITCHCHAT_PATH") == "" {
+		t.OpenPopoutChat(t.GetPopoutChatUrl())
+	} else {
+		exec.Command(os.Getenv("TWITCHCHAT_PATH"), t.BaseChannel.Name()).Start()
+	}
 
 	/*
 		// sometimes mpv delays opening the video
