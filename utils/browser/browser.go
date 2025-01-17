@@ -7,6 +7,7 @@ import (
 	"regexp"
 	"runtime"
 	"strings"
+	"syscall"
 )
 
 type Browser struct {
@@ -21,6 +22,7 @@ func (b Browser) OpenUrl(url string) error {
 		cmd.Args = append(cmd.Args, r.ReplaceAllString(arg, url))
 	}
 
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true, Setctty: false}
 	return cmd.Run()
 	// cmd.Start()
 	// return cmd.Wait()
