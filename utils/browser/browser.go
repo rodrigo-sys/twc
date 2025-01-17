@@ -14,14 +14,17 @@ type Browser struct {
 }
 
 func (b Browser) OpenUrl(url string) error {
-	var cmd exec.Cmd
+	cmd := exec.Cmd{Path: b.Cmd.Path}
 
 	r := regexp.MustCompile(`%u|%U`)
 	for _, arg := range b.Cmd.Args {
 		cmd.Args = append(cmd.Args, r.ReplaceAllString(arg, url))
 	}
 
-	return exec.Command(cmd.Args[0], cmd.Args[1:]...).Run()
+	return cmd.Run()
+	// cmd.Start()
+	// return cmd.Wait()
+
 	/*
 		output, err := exec.Command(cmd.Args[0], cmd.Args[1:]...).CombinedOutput()
 		if err != nil {
@@ -49,6 +52,8 @@ func NewBrower() Browser {
 	}
 
 	cmd.Args = append(cmd.Args, strings.Split(browser_string, " ")...)
+	path, _ := exec.LookPath(cmd.Args[0])
+	cmd.Path = path
 
 	return Browser{Cmd: cmd}
 }
