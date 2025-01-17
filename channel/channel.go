@@ -55,7 +55,6 @@ func (c *BaseChannel) OpenPopoutChat(url string) {
 		browser.Cmd.Args = original_args
 		// browser.OpenUrl(c.GetPopoutChatUrl())
 		browser.OpenUrl(url)
-		return
 	}
 }
 
