@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"syscall"
 	. "twc/channel"
 	. "twc/video"
 )
@@ -45,7 +46,9 @@ func (t Twitch) OpenChannel() {
 	url := t.GetUrl()
 
 	// open stream in player
-	exec.Command("mpv", url).Start()
+	cmd := exec.Command("mpv", url)
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true, Setctty: false}
+	cmd.Start()
 
 	// open chat
 	if os.Getenv("TWITCHCHAT_PATH") == "" {

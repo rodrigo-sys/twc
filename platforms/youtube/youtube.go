@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"syscall"
 	. "twc/channel"
 	. "twc/video"
 )
@@ -47,7 +48,9 @@ func (y Youtube) OpenChannel() {
 	webpage_url, _ := exec.Command("sh", "-c", fmt.Sprintf("yt-dlp --print webpage_url '%s'", url)).Output()
 
 	// open stream in player
-	exec.Command("mpv", url).Start()
+	cmd := exec.Command("mpv", url)
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true, Setctty: false}
+	cmd.Start()
 
 	// open chat
 	if os.Getenv("YOUTUBECHAT_PATH") == "" {

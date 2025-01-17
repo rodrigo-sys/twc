@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"syscall"
 	. "twc/channel"
 	"twc/utils"
 	. "twc/video"
@@ -47,10 +48,11 @@ func (k Kick) CheckStatus() bool {
 
 func (k Kick) OpenChannel() {
 	url := "https://kick.com/" + k.BaseChannel.Name() //+ "/livestream"
-	exec.Command("mpv", url).Start()
 
 	// open stream in player
-	exec.Command("mpv", url).Start()
+	cmd := exec.Command("mpv", url)
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true, Setctty: false}
+	cmd.Start()
 
 	// open chat
 	if os.Getenv("KICKCHAT_PATH") == "" {
