@@ -8,6 +8,7 @@ import (
 	"runtime"
 	"strings"
 	"syscall"
+	"time"
 )
 
 type Browser struct {
@@ -23,17 +24,29 @@ func (b Browser) OpenUrl(url string) error {
 	}
 
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true, Setctty: false}
-	return cmd.Run()
-	// cmd.Start()
-	// return cmd.Wait()
+	if err := cmd.Start(); err != nil {
+		return fmt.Errorf("failed to start browser: %w", err)
+	}
 
-	/*
-		output, err := exec.Command(cmd.Args[0], cmd.Args[1:]...).CombinedOutput()
+	// Run cmd.Wait() in a separate goroutine to avoid blocking
+	done := make(chan error, 1)
+	go func() {
+		done <- cmd.Wait() // Send the result of Wait() to the channel
+	}()
+
+	select {
+	case err := <-done:
+		// Process finished, return the error (if any)
 		if err != nil {
-			fmt.Println(err)
-			fmt.Println(string(output))
+			return fmt.Errorf("browser exited with error: %w", err)
 		}
-	*/
+	case <-time.After(1 * time.Second): // Allow time to detect immediate errors
+		// Timeout reached, assume the browser is running fine
+		// fmt.Printf("Browser launched with PID %d\n", cmd.Process.Pid)
+		return nil
+	}
+
+	return nil
 }
 
 func NewBrower() Browser {

@@ -48,10 +48,9 @@ func (c *BaseChannel) OpenPopoutChat(url string) {
 	browser := NewBrower()
 	original_args := browser.Cmd.Args
 
-	// browser.Cmd.Args = append([]string{browser.Cmd.Args[0]}, append([]string{"--app=%u"}, browser.Cmd.Args[1:]...)...)
 	browser.Cmd.Args = append(browser.Cmd.Args, "--app=%u")
 
-	if err := browser.OpenUrl(c.GetPopoutChatUrl()); err != nil {
+	if err := browser.OpenUrl(url); err != nil {
 		browser.Cmd.Args = original_args
 		// browser.OpenUrl(c.GetPopoutChatUrl())
 		browser.OpenUrl(url)
