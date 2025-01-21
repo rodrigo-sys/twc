@@ -6,6 +6,14 @@
   <img src="https://github.com/user-attachments/assets/6e9362e3-2b95-4a69-836f-978dfaf664db" height=300/> 
 </details>
 
+## Overview
+  
+🎥 **TWC** is a Terminal User Interface (TUI) application that allows you to watch Video on Demand
+ (VOD) and live streams from your favorite streamers on Kick, YouTube, and Twitch. 🚀 Upon
+ launching, you'll be greeted with a menu displaying a list of channels 📺, enabling you to view
+ previous streams ⏪ or watch their current live broadcasts 📡 in a local video player 🎬, along
+ with a custom chat client 💬 or the official pop-out chat 🗨.
+
 ### Installation
 **requirements**
 <details>
