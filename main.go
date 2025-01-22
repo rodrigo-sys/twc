@@ -10,6 +10,7 @@ import (
 	. "twc/channel/channels"
 	config "twc/config/utils"
 	"twc/ui"
+	"twc/utils"
 	. "twc/video"
 
 	"golang.org/x/term"
@@ -21,6 +22,7 @@ func main() {
 	// flags
 	openChannel := flag.String("o", "", "open channel")
 	viewVods := flag.String("v", "", "view vods of channel")
+	editChannelsFile := flag.Bool("e", false, "open channels file in default text editor")
 	flag.Parse()
 
 	switch {
@@ -29,6 +31,9 @@ func main() {
 		os.Exit(0)
 	case *viewVods != "":
 		handleViewVods(*viewVods)
+		os.Exit(0)
+	case *editChannelsFile:
+		handleEditChannelsFile()
 		os.Exit(0)
 	}
 
@@ -106,5 +111,11 @@ func handleViewVods(viewVods string) {
 				video.(ui.ItemWrapper[Video]).Data.Open()
 			}
 		}
+	}
+}
+
+func handleEditChannelsFile() {
+	if channels_file := os.Getenv("CHANNELS_PATH"); channels_file != "" {
+		utils.OpenWithDefaultApp(channels_file)
 	}
 }
