@@ -38,6 +38,8 @@ func (m Model) View() string {
 	text :=
 		"You dont have any channel added\n" +
 			"Press " + keyStyle.Render("e") + " to edit the file\n" +
-			"Press " + keyStyle.Render("q") + " to quit\n" 
+			"Press " + keyStyle.Render("q") + " to quit\n" +
+			"you also can use twc -e to open the channels file\n"
+
 	return text
 }
