@@ -40,7 +40,7 @@ func (m Model) View() string {
 			lipgloss.NewStyle().Italic(true).Render(os.Getenv("CHANNELS_PATH")) + "\n" +
 			"\nPress " + Style.Render("e") + " to edit the file.\n" +
 			"Press " + Style.Render("q") + " to quit.\n" +
-			"You can also use " + Style.Render("twc -e") + " to open the channels file."
+			"You can also use " + Style.Render("twc -e") + " to open it."
 
 	return text
 }
