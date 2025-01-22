@@ -8,7 +8,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-var keyStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("4")).Bold(true)
+var Style = lipgloss.NewStyle().Foreground(lipgloss.Color("4")).Bold(true)
 
 type Model struct {
 }
@@ -36,10 +36,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m Model) View() string {
 	text :=
-		"You dont have any channel added\n" +
-			"Press " + keyStyle.Render("e") + " to edit the file\n" +
-			"Press " + keyStyle.Render("q") + " to quit\n" +
-			"you also can use twc -e to open the channels file\n"
+		"You currently have no channels added in\n" +
+			lipgloss.NewStyle().Italic(true).Render(os.Getenv("CHANNELS_PATH")) + "\n" +
+			"\nPress " + Style.Render("e") + " to edit the file.\n" +
+			"Press " + Style.Render("q") + " to quit.\n" +
+			"You can also use " + Style.Render("twc -e") + " to open the channels file."
 
 	return text
 }
