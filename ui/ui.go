@@ -17,6 +17,8 @@ import (
 	. "twc/platforms/kick"
 	. "twc/platforms/twitch"
 	. "twc/platforms/youtube"
+
+	"twc/ui/nochannels"
 )
 
 /* ITEM */
@@ -282,12 +284,28 @@ func loguear(file_name string, text string) {
 
 /* THE MENU */
 func Menu[T any](items []T) any {
-	p := tea.NewProgram(initialModel(items), tea.WithAltScreen())
+	var m tea.Model
+	var p *tea.Program
+
+	if len(items) == 0 {
+		if _, ok := any(items).([]Channel); ok {
+			m = nochannels.Model{}
+			p = tea.NewProgram(m)
+		}
+	} else {
+		m = initialModel(items)
+		p = tea.NewProgram(m, tea.WithAltScreen())
+	}
+
 	m, err := p.Run()
 	if err != nil {
 		fmt.Printf("error %v", err)
 		os.Exit(1)
 	}
 
-	return m.(model).choice
+	if m, ok := m.(model); ok {
+		return m.choice
+	} else {
+		return nil
+	}
 }
