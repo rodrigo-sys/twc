@@ -90,6 +90,7 @@ func parseChannels(channels_raw string) Channels {
 	// remove lines that start with #
 	channels_raw = regexp.MustCompile("(?m)^#.*$").ReplaceAllString(channels_raw, "")
 	channels_raw = regexp.MustCompile("\n\n+").ReplaceAllString(channels_raw, "\n")
+	channels_raw = regexp.MustCompile(" +").ReplaceAllString(channels_raw, "\t")
 
 	// create a new reader
 	reader := csv.NewReader(strings.NewReader(channels_raw))
