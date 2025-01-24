@@ -8,7 +8,7 @@ import (
 	"strings"
 	. "twc/channel"
 	. "twc/channel/channels"
-	config "twc/config/utils"
+	"twc/setup"
 	"twc/ui"
 	"twc/utils"
 	. "twc/video"
@@ -17,7 +17,8 @@ import (
 )
 
 func main() {
-	config.SetupConfig()
+	setup.CreateProgramFiles()
+	setup.LoadConfig()
 
 	// flags
 	openChannel := flag.String("o", "", "open channel")

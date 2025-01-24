@@ -11,7 +11,7 @@ import (
 	"sync"
 
 	. "twc/channel"
-	_ "twc/config"
+	// _ "twc/config"
 
 	. "twc/platforms/kick"
 	. "twc/platforms/twitch"
@@ -77,7 +77,7 @@ func (channels *Channels) CheckStatus() {
 func (channels *Channels) GetChannels() { // or followed
 	// td: allow using official APIs to get the followed channels
 
-	channels_file := os.Getenv("CHANNELS_PATH")
+	channels_file := os.Getenv("TWC_CHANNELS_PATH")
 	content, err := os.ReadFile(channels_file)
 	if err != nil {
 		fmt.Println("Error opening file:", err)

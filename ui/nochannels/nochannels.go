@@ -24,7 +24,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "q":
 			return m, tea.Quit
 		case "e":
-			if channels_file := os.Getenv("CHANNELS_PATH"); channels_file != "" {
+			if channels_file := os.Getenv("TWC_CHANNELS_PATH"); channels_file != "" {
 				utils.OpenWithDefaultApp(channels_file)
 			}
 			return m, tea.Quit
@@ -37,7 +37,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m Model) View() string {
 	text :=
 		"You currently have no channels added in\n" +
-			lipgloss.NewStyle().Italic(true).Render(os.Getenv("CHANNELS_PATH")) + "\n" +
+			lipgloss.NewStyle().Italic(true).Render(os.Getenv("TWC_CHANNELS_PATH")) + "\n" +
 			"\nPress " + Style.Render("e") + " to edit the file.\n" +
 			"Press " + Style.Render("q") + " to quit.\n" +
 			"You can also use " + Style.Render("twc -e") + " to open it."
