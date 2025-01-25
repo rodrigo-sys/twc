@@ -65,30 +65,9 @@ go install 'https://github.com/rodrigo-sys/twc'
 ```
 
 ### Usage
-Just run 
 ``` sh
-twc
+twc # to open the user interface
 ```  
-to open the interface.
-
-at you first run it will ask you to add some _channels_  
-![2025-01-25_12:45](https://github.com/user-attachments/assets/d6e3a650-d12a-458a-9e2c-cc320bfa462b)
-
-follow the screen instructions to open the channels file  
-here is an example channels file:
-```
-#syntax:
-#<username> <spaces or tab> <platform>
-
-xQc	twitch
-Markiplier	youtube
-Trainwreckstv	kick
-Ninja	twitch
-Jacksepticeye	youtube
-Sodapoppin	kick
-Asmongold	twitch
-CorpseHusband	youtube
-```
 
 **flags**
 ```
