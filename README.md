@@ -74,6 +74,11 @@ go install 'https://github.com/rodrigo-sys/twc'
 ``` sh
 twc # to open the user interface
 ```  
+**navigation**  
+`j` next item  
+`k` previous item  
+`l` select current item  
+`h` go back to main menu  
 
 **flags**
 ```
