@@ -7,7 +7,7 @@
 </details>
 
 ## Overview  
-🎥 **TWC** is a TUI application that allows you to watch VODs and live streams
+**TWC** is a TUI application that allows you to watch 🍿 VODs and live streams
 from your favorite streamers on 
 Kick <img src="https://github.com/user-attachments/assets/d0e305b3-5a25-432f-b9b2-9f0b8a965de5" alt="Description" width="15"/>,
 YouTube <img src="https://github.com/user-attachments/assets/d104ff17-46c3-4817-9875-a4e13d81f00c" alt="Description" width="17"/>,
