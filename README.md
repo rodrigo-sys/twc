@@ -80,6 +80,11 @@ twc # to open the user interface
 `l` select current item  
 `h` go back to main menu  
 
+**current behaviour**  
+when you select an item
+- If the channel is live, it will open the stream in mpv and the chat in the official pop-out. 
+- If the channel is offline, it will open a menu displaying their VODs.
+
 **flags**
 ```
 Usage of twc:
