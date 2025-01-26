@@ -94,7 +94,15 @@ Usage of twc:
   -v string
     	view vods of channel
 ```
+examples:
+```
+twc -o 'Markiplier youtube' # open live stream
+twc -v 'Ninja twitch' # open VODs menu
 
+# you can omit the platform if the channels is in your channels file
+twc -o xQc 
+twc -v Asmongold
+```
 
 **🚧 Work in Progress 🚧**
  
