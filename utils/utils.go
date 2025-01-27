@@ -43,9 +43,15 @@ func OpenWithDefaultApp(filePath string) error {
 	case "darwin":
 		cmd = exec.Command("open", filePath)
 	case "linux":
+		cmd = exec.Command("xdg-open", filePath)
+
 		desktop, _ := exec.Command("xdg-mime", "query", "default", "text/plain").Output()
 		desktop_file, _ := os.ReadFile("/usr/share/applications/" + strings.TrimSpace(string(desktop)))
 		if strings.Contains(string(desktop_file), "Terminal=true") {
+			if os.Getenv("TERMINAL") == "" {
+				break
+			}
+
 			for _, line := range strings.Split(string(desktop_file), "\n") {
 				if strings.HasPrefix(line, "Exec=") {
 					exec_value := strings.TrimSpace(strings.TrimPrefix(line, "Exec="))
@@ -58,8 +64,6 @@ func OpenWithDefaultApp(filePath string) error {
 					break
 				}
 			}
-		} else {
-			cmd = exec.Command("xdg-open", filePath)
 		}
 
 	default:
