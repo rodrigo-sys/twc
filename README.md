@@ -67,7 +67,8 @@ sudo pacman -S go --noconfirm
 
 **the program**
 ```sh
-go install 'https://github.com/rodrigo-sys/twc'
+git clone 'https://github.com/rodrigo-sys/twc' /tmp/twc
+(cd /tmp/twc ; go build -o ~/.local/bin/twc main.go)
 ```
 
 ### Usage
