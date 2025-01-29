@@ -47,10 +47,13 @@ sudo pacman -S yt-dlp --noconfirm
   
 ```sh
 sudo apt install npm -y
+sudo apt install libnss3 -y
+npm config set prefix '~/.local'
 npm install -g 'https://github.com/rodrigo-sys/stealth-cli'
 ```
 ```sh
 sudo pacman -S npm --noconfirm
+npm config set prefix '~/.local'
 npm install -g 'https://github.com/rodrigo-sys/stealth-cli'
 ```
 </details>
