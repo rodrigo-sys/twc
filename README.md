@@ -52,7 +52,7 @@ npm config set prefix '~/.local'
 npm install -g 'https://github.com/rodrigo-sys/stealth-cli'
 ```
 ```sh
-sudo pacman -S npm --noconfirm
+sudo pacman -S npm --needed --noconfirm
 npm config set prefix '~/.local'
 npm install -g 'https://github.com/rodrigo-sys/stealth-cli'
 ```
