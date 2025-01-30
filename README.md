@@ -33,14 +33,22 @@ sudo pacman -S mpv --noconfirm
 ```
 </details>
 <details>
-  <summary><a href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a></summary>
-  
-```sh
-sudo apt install yt-dlp -y
-```
-```sh
-sudo pacman -S yt-dlp --noconfirm
-```
+  <summary><a href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a> -nighlty version recommended-</summary>
+  first install pipx:
+
+  ```sh
+  sudo apt install pipx -y
+  ```
+
+  ```sh
+  sudo pacman -S python-pipx --noconfirm --needed
+  ```
+
+  then run:
+  ```sh
+  pipx install yt-dlp[default,curl_cffi]
+  pipx runpip yt-dlp install --pre --force yt-dlp[default,curl_cffi]
+  ```
 </details>
 <details>
   <summary><a href="https://github.com/rodrigo-sys/stealth-cli">stealth-cli</a> (for kick support)</summary>
