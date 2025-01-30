@@ -35,7 +35,7 @@ sudo pacman -S mpv --noconfirm
 <details>
   <summary><a href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a> -nightly version recommended-</summary>
   
-  first install pipx:
+  **first install pipx:**
 
   ```sh
   sudo apt install pipx -y
@@ -45,7 +45,7 @@ sudo pacman -S mpv --noconfirm
   sudo pacman -S python-pipx --needed --noconfirm
   ```
 
-  then run:
+  **then run:**
   ```sh
   pipx install yt-dlp[default,curl_cffi]
   pipx runpip yt-dlp install --pre --force yt-dlp[default,curl_cffi]
