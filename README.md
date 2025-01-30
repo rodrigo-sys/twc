@@ -33,7 +33,8 @@ sudo pacman -S mpv --noconfirm
 ```
 </details>
 <details>
-  <summary><a href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a> -nighlty version recommended-</summary>
+  <summary><a href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a> -nightly version recommended-</summary>
+  
   first install pipx:
 
   ```sh
@@ -41,7 +42,7 @@ sudo pacman -S mpv --noconfirm
   ```
 
   ```sh
-  sudo pacman -S python-pipx --noconfirm --needed
+  sudo pacman -S python-pipx --needed --noconfirm
   ```
 
   then run:
