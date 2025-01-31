@@ -9,12 +9,15 @@ CONFIG_DIR="<your config dir>"
 TWC_CHANNELS_PATH="$CONFIG_DIR/twc/channels"
 
 # You can use custom chats per platform like this
+# placeholders: %n username, %u video/stream url
 
-# KICKCHAT_PATH="$HOME/.npm-global/bin/kichatty"
+# KICK_CHAT="$HOME/.npm-global/bin/kichatty '%n'"
 # https://github.com/rodrigo-sys/kichatty
 
-# YOUTUBECHAT_PATH="pytchatty"
+# YOUTUBE_CHAT="pytchatty '%u'"
 # https://github.com/rodrigo-sys/pytchatty
+
+# TWITCH_CHAT="chatterino -c '%n'"
 `
 
 var channels = `

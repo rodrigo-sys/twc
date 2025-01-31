@@ -5,11 +5,11 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"os"
 	"os/exec"
 	"strings"
 	"syscall"
 	. "twc/channel"
+	"twc/utils"
 	. "twc/video"
 )
 
@@ -53,10 +53,11 @@ func (y Youtube) OpenChannel() {
 	cmd.Start()
 
 	// open chat
-	if os.Getenv("YOUTUBECHAT_PATH") == "" {
+	chat, err := utils.ParseChatEnvar("YOUTUBE_CHAT", y.BaseChannel.Name(), string(webpage_url))
+	if err != nil {
 		y.OpenPopoutChat(y.GetPopoutChatUrl())
 	} else {
-		exec.Command(os.Getenv("YOUTUBECHAT_PATH"), string(webpage_url)).Start()
+		chat.Start()
 	}
 }
 

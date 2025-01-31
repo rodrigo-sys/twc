@@ -3,7 +3,6 @@ package platforms
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"os/exec"
 	"syscall"
 	. "twc/channel"
@@ -55,11 +54,13 @@ func (k Kick) OpenChannel() {
 	cmd.Start()
 
 	// open chat
-	if os.Getenv("KICKCHAT_PATH") == "" {
+	chat, err := utils.ParseChatEnvar("KICK_CHAT", k.BaseChannel.Name(), url)
+	if err != nil {
 		k.OpenPopoutChat(k.GetPopoutChatUrl())
 	} else {
-		exec.Command(os.Getenv("KICKCHAT_PATH"), k.BaseChannel.Name()).Start()
+		chat.Start()
 	}
+
 	/*
 		// using direct url
 		var scrapper_json map[string]interface{}
