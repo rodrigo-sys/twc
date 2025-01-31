@@ -81,3 +81,38 @@ func OpenWithDefaultApp(filePath string) error {
 		return nil
 	*/
 }
+
+func ParseChatEnvar(chat_envar string, name string, url string) (exec.Cmd, error) {
+	var cmd exec.Cmd
+	var chat_string string
+
+	if os.Getenv(chat_envar) == "" {
+		return exec.Cmd{}, fmt.Errorf("chat envar empty")
+	}
+	chat_string = os.Getenv(chat_envar)
+
+	if match, _ := regexp.MatchString(`^['"]`, chat_string); match {
+		r, _ := regexp.Compile(`['"](.*)['"] (.*)`)
+		match := r.FindStringSubmatch(chat_string)
+
+		if len(match) != 0 {
+			cmd.Args = append(cmd.Args, match[1])
+			chat_string = match[2]
+		}
+	}
+
+	cmd.Args = append(cmd.Args, strings.Split(chat_string, " ")...)
+	path, _ := exec.LookPath(cmd.Args[0])
+	cmd.Path = path
+
+	// replace placeholder with actual values
+	name_regex := regexp.MustCompile(`%n`)
+	url_regex := regexp.MustCompile(`%u`)
+	for i, arg := range cmd.Args {
+		arg = name_regex.ReplaceAllString(arg, name)
+		arg = url_regex.ReplaceAllString(arg, url)
+		cmd.Args[i] = arg
+	}
+
+	return cmd, nil
+}
