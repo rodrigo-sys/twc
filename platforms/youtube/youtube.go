@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"os/exec"
 	"strings"
 	"syscall"
@@ -53,7 +54,7 @@ func (y Youtube) OpenChannel() {
 	cmd.Start()
 
 	// open chat
-	chat, err := utils.ParseChatEnvar("YOUTUBE_CHAT", y.BaseChannel.Name(), string(webpage_url))
+	chat, err := utils.ParseChatOption(os.Getenv("YOUTUBE_CHAT"), y.BaseChannel.Name(), string(webpage_url))
 	if err != nil {
 		y.OpenPopoutChat(y.GetPopoutChatUrl())
 	} else {

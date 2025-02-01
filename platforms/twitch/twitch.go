@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"os/exec"
 	"strings"
 	"syscall"
@@ -51,7 +52,7 @@ func (t Twitch) OpenChannel() {
 	cmd.Start()
 
 	// open chat
-	chat, err := utils.ParseChatEnvar("TWITCH_CHAT", t.BaseChannel.Name(), url)
+	chat, err := utils.ParseChatOption(os.Getenv("TWITCH_CHAT"), t.BaseChannel.Name(), url)
 	if err != nil {
 		t.OpenPopoutChat(t.GetPopoutChatUrl())
 	} else {

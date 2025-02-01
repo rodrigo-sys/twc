@@ -82,35 +82,38 @@ func OpenWithDefaultApp(filePath string) error {
 	*/
 }
 
-func ParseChatEnvar(chat_envar string, name string, url string) (exec.Cmd, error) {
+type Placeholders map[string]string
+
+func ParseChatOption(option_value string, name string, url string) (exec.Cmd, error) {
+	return ParseCmdOption(option_value, Placeholders{"%n": name, "%u": url})
+}
+
+func ParseCmdOption(option_value string, placeholders Placeholders) (exec.Cmd, error) {
 	var cmd exec.Cmd
-	var chat_string string
 
-	if os.Getenv(chat_envar) == "" {
-		return exec.Cmd{}, fmt.Errorf("chat envar empty")
+	if option_value == "" {
+		return exec.Cmd{}, fmt.Errorf("empty option")
 	}
-	chat_string = os.Getenv(chat_envar)
 
-	if match, _ := regexp.MatchString(`^['"]`, chat_string); match {
+	if match, _ := regexp.MatchString(`^['"]`, option_value); match {
 		r, _ := regexp.Compile(`['"](.*)['"] (.*)`)
-		match := r.FindStringSubmatch(chat_string)
+		match := r.FindStringSubmatch(option_value)
 
 		if len(match) != 0 {
 			cmd.Args = append(cmd.Args, match[1])
-			chat_string = match[2]
+			option_value = match[2]
 		}
 	}
 
-	cmd.Args = append(cmd.Args, strings.Split(chat_string, " ")...)
+	cmd.Args = append(cmd.Args, strings.Split(option_value, " ")...)
 	path, _ := exec.LookPath(cmd.Args[0])
 	cmd.Path = path
 
 	// replace placeholder with actual values
-	name_regex := regexp.MustCompile(`%n`)
-	url_regex := regexp.MustCompile(`%u`)
 	for i, arg := range cmd.Args {
-		arg = name_regex.ReplaceAllString(arg, name)
-		arg = url_regex.ReplaceAllString(arg, url)
+		for placeholder, value := range placeholders {
+			arg = strings.ReplaceAll(arg, placeholder, value)
+		}
 		cmd.Args[i] = arg
 	}
 
