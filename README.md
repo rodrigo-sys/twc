@@ -119,6 +119,11 @@ twc -o xQc
 twc -v Asmongold
 ```
 
+### Files 
+config: "$HOME/.config/twc/config.env"  
+channels: "$HOME/.config/twc/channels"
+
+
 **🚧 Work in Progress 🚧**
  
  This README is still being developed. Please check back later for more information.
