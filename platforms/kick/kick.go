@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"os/exec"
 	"syscall"
 	. "twc/channel"
 	"twc/utils"
@@ -50,7 +49,7 @@ func (k Kick) OpenChannel() {
 	url := "https://kick.com/" + k.BaseChannel.Name() //+ "/livestream"
 
 	// open stream in player
-	cmd := exec.Command("mpv", url)
+	cmd, _ := utils.ParsePlayerOption(os.Getenv("TWC_PLAYER"), url)
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true, Setctty: false}
 	cmd.Start()
 

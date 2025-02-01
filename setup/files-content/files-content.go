@@ -7,6 +7,7 @@ HOME="<your user home dir>"
 CONFIG_DIR="<your config dir>"
 
 TWC_CHANNELS_PATH="$CONFIG_DIR/twc/channels"
+TWC_PLAYER="mpv %u"
 
 # You can use custom chats per platform like this
 # placeholders: %n username, %u video/stream url

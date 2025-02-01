@@ -47,7 +47,7 @@ func (t Twitch) OpenChannel() {
 	url := t.GetUrl()
 
 	// open stream in player
-	cmd := exec.Command("mpv", url)
+	cmd, _ := utils.ParsePlayerOption(os.Getenv("TWC_PLAYER"), url)
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true, Setctty: false}
 	cmd.Start()
 

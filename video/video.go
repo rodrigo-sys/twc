@@ -3,7 +3,8 @@ package video
 import (
 	"fmt"
 	"log"
-	"os/exec"
+	"os"
+	"twc/utils"
 
 	"github.com/koki-develop/go-fzf"
 )
@@ -27,7 +28,8 @@ type BaseVideo struct {
 
 /* methods */
 func (v *BaseVideo) Open() {
-	output, err := exec.Command("mpv", v.url).CombinedOutput()
+	cmd, _ := utils.ParsePlayerOption(os.Getenv("TWC_PLAYER"), v.url)
+	output, err := cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println(string(output))
 	}

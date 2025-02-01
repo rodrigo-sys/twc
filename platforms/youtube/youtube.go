@@ -49,7 +49,7 @@ func (y Youtube) OpenChannel() {
 	webpage_url, _ := exec.Command("sh", "-c", fmt.Sprintf("yt-dlp --print webpage_url '%s'", url)).Output()
 
 	// open stream in player
-	cmd := exec.Command("mpv", url)
+	cmd, _ := utils.ParsePlayerOption(os.Getenv("TWC_PLAYER"), url)
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true, Setctty: false}
 	cmd.Start()
 
