@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"os/exec"
+	"strings"
 	"syscall"
 	. "twc/channel"
 	"twc/utils"
@@ -48,11 +50,6 @@ func (k Kick) CheckStatus() bool {
 func (k Kick) OpenChannel() {
 	url := "https://kick.com/" + k.BaseChannel.Name() //+ "/livestream"
 
-	// open stream in player
-	cmd, _ := utils.ParsePlayerOption(os.Getenv("TWC_PLAYER"), url)
-	cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true, Setctty: false}
-	cmd.Start()
-
 	// open chat
 	chat, err := utils.ParseChatOption(os.Getenv("KICK_CHAT"), k.BaseChannel.Name(), url)
 	if err != nil {
@@ -61,21 +58,25 @@ func (k Kick) OpenChannel() {
 		chat.Start()
 	}
 
-	/*
-		// using direct url
-		var scrapper_json map[string]interface{}
-		var scrapper_output string
+	// open stream in player
+	var scrapper_json map[string]interface{}
+	var scrapper_output string
 
-		scrapper_output = utils.CloudScraperGet(k.GetUrl() + "/livestream")
-		json.Unmarshal([]byte(scrapper_output), &scrapper_json)
+	scrapper_output = utils.CloudScraperGet(k.GetUrl() + "/livestream")
+	json.Unmarshal([]byte(scrapper_output), &scrapper_json)
 
-		playback_url := scrapper_json["data"].(map[string]interface{})["playback_url"].(string)
-		title := scrapper_json["data"].(map[string]interface{})["session_title"].(string)
+	playback_url := scrapper_json["data"].(map[string]interface{})["playback_url"].(string)
+	title := scrapper_json["data"].(map[string]interface{})["session_title"].(string)
 
-		exec.Command("sh", "-c", fmt.Sprintf(
-			`mpv --title='%s' --force-media-title='%s' '%s'`, title, title, playback_url,
-		)).Start()
-	*/
+	var cmd exec.Cmd
+	if strings.Contains(os.Getenv("TWC_PLAYER"), "mpv") {
+		cmd = *exec.Command("sh", "-c",
+			fmt.Sprintf(`mpv --title='%s' --force-media-title='%s' '%s'`, title, title, playback_url))
+	} else {
+		cmd, _ = utils.ParsePlayerOption(os.Getenv("TWC_PLAYER"), url)
+	}
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true, Setctty: false}
+	cmd.Start()
 }
 
 func (k Kick) GetVods() Videos {
