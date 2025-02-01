@@ -88,6 +88,10 @@ func ParseChatOption(option_value string, name string, url string) (exec.Cmd, er
 	return ParseCmdOption(option_value, Placeholders{"%n": name, "%u": url})
 }
 
+func ParsePlayerOption(option_value string, url string) (exec.Cmd, error) {
+	return ParseCmdOption(option_value, Placeholders{"%u": url})
+}
+
 func ParseCmdOption(option_value string, placeholders Placeholders) (exec.Cmd, error) {
 	var cmd exec.Cmd
 
