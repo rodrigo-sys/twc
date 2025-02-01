@@ -24,7 +24,9 @@ in a local video player 🎬, along with the official pop-out chat 🗨 or a cus
 **requirements**
 <details>
   <summary><a href="https://mpv.io/">mpv</a></summary>
-  
+  this is optional; mpv is the default player of the application but
+  you can specify another video player in the config
+
 ```sh
 sudo apt install mpv -y
 ```
