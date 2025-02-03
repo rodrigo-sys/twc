@@ -21,9 +21,12 @@ TWC_PLAYER="mpv %u"
 # TWITCH_CHAT="chatterino -c '%n'"
 
 # If a platform does not has a custom chat, it will use the browser.
-# To specify a browser other than your default, use the TWC_BROWSER option:
+# To specify a browser other than your default, use the TWC_BROWSER option
 # placeholders: %u - represents the url
 # TWC_BROWSER="qutebrowser --target window %u"
+
+# If %u is missing, the url will be appended to the end
+# TWC_BROWSER="qutebrowser --target window"
 `
 
 var channels = `
