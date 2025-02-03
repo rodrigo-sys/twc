@@ -19,11 +19,20 @@ func (b Browser) OpenUrl(url string) error {
 	cmd := exec.Cmd{Path: b.Cmd.Path}
 
 	r := regexp.MustCompile(`%u|%U`)
-	for _, arg := range b.Cmd.Args {
-		cmd.Args = append(cmd.Args, r.ReplaceAllString(arg, url))
+	if r.MatchString(strings.Join(b.Cmd.Args, " ")) {
+		for _, arg := range b.Cmd.Args {
+			cmd.Args = append(cmd.Args, r.ReplaceAllString(arg, url))
+		}
+	} else {
+		cmd.Args = append(b.Cmd.Args, url)
 	}
 
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true, Setctty: false}
+	// output, err := cmd.CombinedOutput()
+	// if err != nil {
+	// 	fmt.Println(err.Error())
+	// 	fmt.Println(output)
+	// }
 	if err := cmd.Start(); err != nil {
 		return fmt.Errorf("failed to start browser: %w", err)
 	}
