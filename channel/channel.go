@@ -45,7 +45,7 @@ func (c *BaseChannel) GetPopoutChatUrl() string {
 }
 
 func (c *BaseChannel) OpenPopoutChat(url string) {
-	browser := NewBrower()
+	browser := NewBrowser()
 	original_args := browser.Cmd.Args
 
 	browser.Cmd.Args = append(browser.Cmd.Args, "--app=%u")

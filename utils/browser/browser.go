@@ -49,7 +49,7 @@ func (b Browser) OpenUrl(url string) error {
 	return nil
 }
 
-func NewBrower() Browser {
+func NewBrowser() Browser {
 	var cmd exec.Cmd
 	var browser_string string
 
@@ -60,14 +60,27 @@ func NewBrower() Browser {
 	}
 
 	if match, _ := regexp.MatchString(`^['"]`, browser_string); match {
-		r, _ := regexp.Compile(`['"](.*)['"] (.*)`)
+		r, _ := regexp.Compile(`['"](.*)['"]( (.*))?`)
 		match := r.FindStringSubmatch(browser_string)
+
+		if strings.HasPrefix(match[1], "~/") {
+			r := regexp.MustCompile(`^~`)
+			home, _ := os.UserHomeDir()
+			match[1] = r.ReplaceAllString(match[1], home)
+		}
+
 		cmd.Args = append(cmd.Args, match[1])
-		browser_string = match[2]
+		browser_string = match[3]
 	}
 
-	cmd.Args = append(cmd.Args, strings.Split(browser_string, " ")...)
-	path, _ := exec.LookPath(cmd.Args[0])
+	if browser_string != "" {
+		cmd.Args = append(cmd.Args, strings.Split(browser_string, " ")...)
+	}
+
+	path, err := exec.LookPath(cmd.Args[0])
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 	cmd.Path = path
 
 	return Browser{Cmd: cmd}
