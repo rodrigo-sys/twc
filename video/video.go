@@ -1,9 +1,11 @@
 package video
 
 import (
+	"bufio"
 	"fmt"
 	"log"
 	"os"
+	"syscall"
 	"twc/utils"
 
 	"github.com/koki-develop/go-fzf"
@@ -29,9 +31,22 @@ type BaseVideo struct {
 /* methods */
 func (v *BaseVideo) Open() {
 	cmd, _ := utils.ParsePlayerOption(os.Getenv("TWC_PLAYER"), v.url)
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		fmt.Println(string(output))
+
+	// detach command
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setsid: true}
+
+	// create a pipe for the command's standard output
+	stdout, _ := cmd.StdoutPipe()
+
+	// start command
+	cmd.Start()
+
+	// show realtime output
+	scanner := bufio.NewScanner(stdout)
+	scanner.Split(bufio.ScanLines)
+	for scanner.Scan() {
+		m := scanner.Text()
+		fmt.Println(m)
 	}
 }
 
