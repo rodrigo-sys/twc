@@ -116,7 +116,7 @@ func handleViewVods(viewVods string) {
 }
 
 func handleEditChannelsFile() {
-	if channels_file := os.Getenv("CHANNELS_PATH"); channels_file != "" {
+	if channels_file := os.Getenv("TWC_CHANNELS_PATH"); channels_file != "" {
 		utils.OpenWithDefaultApp(channels_file)
 	}
 }
