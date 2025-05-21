@@ -1,4 +1,4 @@
-# twc
+# twc [beta] [linux only]
 
 <img src="https://github.com/user-attachments/assets/616a846f-b76d-496f-bf36-096c1bb1e954" height=300/>
 <details>
