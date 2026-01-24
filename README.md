@@ -1,4 +1,14 @@
 # twc [beta] [linux only]
+---
+
+<p align="center">
+  <a href="#overview" style="margin: 0 10px;">Overview</a> •
+  <a href="#installation">Installation</a> •
+  <a href="#usage">Usage</a> •
+  <a href="#files">Files</a>
+</p>
+
+---
 
 <img src="https://github.com/user-attachments/assets/616a846f-b76d-496f-bf36-096c1bb1e954" height=300/>
 <details>
