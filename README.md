@@ -127,10 +127,5 @@ channels: `$HOME/.config/twc/channels`
 - Windows support
 - Proper use of composition
 
-**🚧 Work in Progress 🚧**
- 
- This README is still being developed. Please check back later for more information.
-
-
 
 
