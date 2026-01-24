@@ -120,8 +120,8 @@ twc -v Asmongold
 ```
 
 ### Files 
-config: "$HOME/.config/twc/config.env"  
-channels: "$HOME/.config/twc/channels"
+config: `$HOME/.config/twc/config.env`  
+channels: `$HOME/.config/twc/channels`
 
 
 **🚧 Work in Progress 🚧**
