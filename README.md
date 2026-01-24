@@ -123,6 +123,9 @@ twc -v Asmongold
 config: `$HOME/.config/twc/config.env`  
 channels: `$HOME/.config/twc/channels`
 
+### TODOs:
+- Windows support
+- Proper use of composition
 
 **🚧 Work in Progress 🚧**
  
