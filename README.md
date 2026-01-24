@@ -16,18 +16,9 @@
 </details>
 
 ## Overview  
-**TWC** is a TUI application that allows you to watch 🍿 VODs and live streams
-from your favorite streamers of 
-Kick <img src="https://github.com/user-attachments/assets/d0e305b3-5a25-432f-b9b2-9f0b8a965de5" alt="Description" width="15"/>,
-YouTube <img src="https://github.com/user-attachments/assets/d104ff17-46c3-4817-9875-a4e13d81f00c" alt="Description" width="17"/>,
-and Twitch <img src="https://github.com/user-attachments/assets/c3d44e61-1a60-4b4a-bf87-14f404d65390" alt="Description" width="15"/>.
-Upon launching 🚀 , you'll be greeted with a menu displaying a list of channels 📺, enabling you to view
- previous streams ⏪ or watch their current live broadcasts 📡
-in a local video player 🎬, along with the official pop-out chat 🗨 or a custom chat client 💬.
+**TWC** is a TUI application that lets you watch VODs and live streams from streamers on Kick <img src="https://github.com/user-attachments/assets/d0e305b3-5a25-432f-b9b2-9f0b8a965de5" alt="Kick" width="15"/>, YouTube <img src="https://github.com/user-attachments/assets/d104ff17-46c3-4817-9875-a4e13d81f00c" alt="YouTube" width="17"/>, and Twitch <img src="https://github.com/user-attachments/assets/c3d44e61-1a60-4b4a-bf87-14f404d65390" alt="Twitch" width="15"/> 
 
- 
-
-
+It starts with a menu showing a list of channels that you can navigate to watch past streams ⏪ or current live broadcasts 📡 in a local video player 🎬, along with the official pop-out chat or a custom chat client 💬.
 
 ### Installation
 **requirements**
